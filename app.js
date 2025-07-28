@@ -8,6 +8,16 @@ function setLinks(links) {
     localStorage.setItem(LINKS_KEY, JSON.stringify(links));
 }
 
+// --- Favicon helper ---
+function getFaviconUrl(url) {
+    try {
+        const u = new URL(url);
+        return u.origin + '/favicon.ico';
+    } catch {
+        return '';
+    }
+}
+
 // --- Rendering ---
 function renderLinks() {
     const list = document.getElementById('links-list');
@@ -26,6 +36,16 @@ function renderLinks() {
         li.addEventListener('dragleave', onDragLeave);
         li.addEventListener('drop', onDrop);
         li.addEventListener('dragend', onDragEnd);
+
+        // Favicon
+        const favicon = document.createElement('img');
+        favicon.className = "link-favicon";
+        favicon.src = getFaviconUrl(item.url);
+        favicon.alt = '';
+        favicon.onerror = function() {
+            this.style.display = "none";
+        };
+        li.appendChild(favicon);
 
         const a = document.createElement('a');
         a.className = "link-name";

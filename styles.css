@@ -91,7 +91,6 @@ input[type="file"] {
     margin-top: 2em;
     padding: 2em 2em 1em 2em;
     border-radius: 14px;
-    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
 }
 
 /* Square grid for links */
@@ -113,12 +112,11 @@ input[type="file"] {
     border-radius: 10px;
     padding: 1.2em 0.5em 0.7em 0.5em;
     min-height: 100px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.10);
-    transition: background 0.2s, box-shadow 0.2s;
+    /* Removed box-shadow (glow effect) */
+    transition: background 0.2s;
     position: relative;
     user-select: none;
     cursor: grab;
-    /* dragging feedback */
 }
 .link-item:active {
     cursor: grabbing;
@@ -131,12 +129,20 @@ input[type="file"] {
     outline: 2px dashed #00adb5;
     background: #23272e;
 }
-
 .link-item:hover {
     background: #23272e;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.12);
 }
 
+.link-favicon {
+    width: 28px;
+    height: 28px;
+    display: block;
+    margin: 0 auto 0.5em auto;
+    border-radius: 5px;
+    background: #23272e;
+    object-fit: contain;
+    box-shadow: 0 0 0 1px #23272e;
+}
 .link-name {
     text-decoration: none;
     color: #00fff5;
@@ -147,7 +153,6 @@ input[type="file"] {
     margin-bottom: 0.7em;
     width: 100%;
 }
-
 .remove-btn {
     position: absolute;
     top: 8px;
@@ -194,7 +199,6 @@ input[type="file"] {
     border-radius: 14px;
     max-width: 350px;
     border: 1px solid #23272e;
-    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
     position: relative;
 }
 .close {
