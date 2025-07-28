@@ -92,6 +92,7 @@ body.theme-blue {
     --forest-bg-image: none;
 }
 body.theme-forest {
+    /* variables */
     --bg: transparent;
     --bg-alt: transparent;
     --navbar-bg: rgba(30,44,32,0.85);
@@ -114,6 +115,7 @@ body.theme-forest {
     --blur: blur(12px);
     --forest-bg-image: url('forest_bg.png');
 }
+/* This part is required and must be outside the above block */
 body.theme-forest {
     background-image: var(--forest-bg-image);
     background-size: cover;
