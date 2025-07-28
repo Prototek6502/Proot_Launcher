@@ -117,7 +117,7 @@ body.theme-forest {
 }
 /* This part is required and must be outside the above block */
 body.theme-forest {
-    background-image: var(--forest-bg-image);
+    background-image: url('forest_bg.png');
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
