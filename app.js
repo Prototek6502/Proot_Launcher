@@ -1,13 +1,14 @@
 const LINKS_KEY = "launcher_links";
 
+// --- Data access ---
 function getLinks() {
     return JSON.parse(localStorage.getItem(LINKS_KEY) || "[]");
 }
-
 function setLinks(links) {
     localStorage.setItem(LINKS_KEY, JSON.stringify(links));
 }
 
+// --- Rendering ---
 function renderLinks() {
     const list = document.getElementById('links-list');
     list.innerHTML = '';
@@ -15,6 +16,17 @@ function renderLinks() {
     links.forEach((item, idx) => {
         const li = document.createElement('li');
         li.className = "link-item";
+        li.draggable = true;
+        li.dataset.index = idx;
+
+        // Drag events
+        li.addEventListener('dragstart', onDragStart);
+        li.addEventListener('dragover', onDragOver);
+        li.addEventListener('dragenter', onDragEnter);
+        li.addEventListener('dragleave', onDragLeave);
+        li.addEventListener('drop', onDrop);
+        li.addEventListener('dragend', onDragEnd);
+
         const a = document.createElement('a');
         a.className = "link-name";
         a.href = item.url;
@@ -36,13 +48,13 @@ function renderLinks() {
     });
 }
 
+// --- Add/remove ---
 function addLink(name, url) {
     const links = getLinks();
     links.push({ name, url });
     setLinks(links);
     renderLinks();
 }
-
 function removeLink(idx) {
     const links = getLinks();
     links.splice(idx, 1);
@@ -50,6 +62,7 @@ function removeLink(idx) {
     renderLinks();
 }
 
+// --- Export/Import ---
 function exportLinks() {
     const links = getLinks();
     const content = JSON.stringify(links, null, 2);
@@ -65,7 +78,6 @@ function exportLinks() {
 
     URL.revokeObjectURL(url);
 }
-
 function importLinksFromFile(file) {
     if (!file) return;
     const reader = new FileReader();
@@ -85,7 +97,7 @@ function importLinksFromFile(file) {
     reader.readAsText(file);
 }
 
-// Modal logic
+// --- Modal logic (popup for Add Link) ---
 function openAddLinkModal() {
     document.getElementById('add-link-modal').style.display = "block";
     setTimeout(() => {
@@ -96,24 +108,17 @@ function closeAddLinkModal() {
     document.getElementById('add-link-modal').style.display = "none";
     document.getElementById('add-link-form').reset();
 }
-
-// Add event listeners for modal open/close
 document.getElementById('add-link-open-btn').addEventListener('click', openAddLinkModal);
 document.getElementById('add-link-close-btn').addEventListener('click', closeAddLinkModal);
-
-// Close modal when clicking outside modal content
 window.onclick = function(event) {
     const modal = document.getElementById('add-link-modal');
     if (event.target === modal) {
         closeAddLinkModal();
     }
 };
-
-// Allow ESC key to close modal
 window.addEventListener('keydown', function(event) {
     if (event.key === "Escape") closeAddLinkModal();
 });
-
 document.getElementById('add-link-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const name = document.getElementById('link-name').value.trim();
@@ -122,13 +127,54 @@ document.getElementById('add-link-form').addEventListener('submit', function(e) 
     addLink(name, url);
     closeAddLinkModal();
 });
-
 document.getElementById('export-btn').addEventListener('click', exportLinks);
-
 document.getElementById('import-input').addEventListener('change', function(e) {
     const file = e.target.files[0];
     importLinksFromFile(file);
     this.value = ""; // reset for next import
 });
 
+// --- Drag and drop logic ---
+let dragSrcIdx = null;
+function onDragStart(e) {
+    dragSrcIdx = Number(this.dataset.index);
+    this.classList.add('dragging');
+    e.dataTransfer.effectAllowed = "move";
+    e.dataTransfer.setData('text/plain', dragSrcIdx);
+}
+function onDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    return false;
+}
+function onDragEnter(e) {
+    if (Number(this.dataset.index) !== dragSrcIdx) {
+        this.classList.add('drag-over');
+    }
+}
+function onDragLeave(e) {
+    this.classList.remove('drag-over');
+}
+function onDrop(e) {
+    e.stopPropagation();
+    this.classList.remove('drag-over');
+    const targetIdx = Number(this.dataset.index);
+    if (dragSrcIdx === null || dragSrcIdx === targetIdx) return false;
+    // Rearrange links
+    const links = getLinks();
+    const [moved] = links.splice(dragSrcIdx, 1);
+    links.splice(targetIdx, 0, moved);
+    setLinks(links);
+    renderLinks();
+    return false;
+}
+function onDragEnd(e) {
+    // Remove all drag-over and dragging classes
+    document.querySelectorAll('.link-item').forEach(item => {
+        item.classList.remove('dragging','drag-over');
+    });
+    dragSrcIdx = null;
+}
+
+// --- Init ---
 window.onload = renderLinks;
