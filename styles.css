@@ -19,6 +19,7 @@
     --modal-border: #23242a;
     --secondary-text: #b5b5b5;
 }
+
 body.theme-dark {
     --bg: #1a1b1f;
     --bg-alt: #1a1b1f;
@@ -83,12 +84,42 @@ body.theme-blue {
     --secondary-text: #a1b6d6;
 }
 
-body {
+/* Forest Theme */
+body.theme-forest {
+    --bg: transparent;
+    --bg-alt: transparent;
+    --navbar-bg: rgba(30,44,32,0.85);
+    --card-bg: rgba(44, 58, 45, 0.7);
+    --text: #e3f6d5;
+    --border: #6c997b;
+    --border-hover: #a8e6a3;
+    --card-border: #446d59;
+    --accent: rgba(76, 110, 87, 0.6);
+    --accent-hover: rgba(84, 120, 97, 0.7);
+    --remove-btn: #49734d;
+    --remove-btn-hover: #db5d5d;
+    --input-bg: rgba(44, 58, 45, 0.7);
+    --input-border: #6c997b;
+    --input-border-focus: #a8e6a3;
+    --modal-bg: transparent;
+    --modal-content-bg: rgba(44, 58, 45, 0.85);
+    --modal-border: #6c997b;
+    --secondary-text: #bce7c3;
+    --blur: blur(12px);
+    --forest-bg-image: url('forest_bg.png');
+}
+
+/* Uniform backgrounds */
+body,
+body.theme-forest {
     background: var(--bg);
-    color: var(--text);
-    font-family: 'Segoe UI', Arial, sans-serif;
-    margin: 0;
-    padding: 0;
+    min-height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
+body.theme-forest {
+    background-image: var(--forest-bg-image);
 }
 
 .navbar {
@@ -103,7 +134,15 @@ body {
     position: sticky;
     top: 0;
     z-index: 10;
+    /* Forest theme blur */
+    backdrop-filter: none;
 }
+body.theme-forest .navbar {
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border-bottom: 1.5px solid var(--border);
+}
+
 .navbar-title {
     font-size: 1.4em;
     color: var(--text);
@@ -144,6 +183,7 @@ body {
     background: var(--accent);
 }
 
+/* Button backgrounds with blur for forest theme */
 #add-link-open-btn,
 #import-css-open-btn,
 #export-btn,
@@ -159,6 +199,8 @@ body {
     font-size: 1em;
     margin: 0;
     display: inline-block;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 #add-link-open-btn:hover,
 #import-css-open-btn:hover,
@@ -168,6 +210,25 @@ body {
     border: 1.5px solid var(--border-hover);
     color: var(--text);
 }
+body.theme-forest #add-link-open-btn,
+body.theme-forest #import-css-open-btn,
+body.theme-forest #export-btn,
+body.theme-forest .import-label {
+    background: var(--card-bg);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1.5px solid var(--border);
+    color: var(--text);
+}
+body.theme-forest #add-link-open-btn:hover,
+body.theme-forest #import-css-open-btn:hover,
+body.theme-forest #export-btn:hover,
+body.theme-forest .import-label:hover {
+    background: var(--accent-hover);
+    border: 1.5px solid var(--border-hover);
+    color: #fff;
+}
+
 .import-label {
     background: var(--card-bg);
     color: var(--secondary-text);
@@ -206,7 +267,17 @@ input[type="file"] {
     margin-top: 2em;
     padding: 2em 2em 1em 2em;
     border-radius: 14px;
+    box-shadow: none;
+    /* Forest theme blur */
+    backdrop-filter: none;
 }
+body.theme-forest .launcher-container {
+    background: var(--card-bg);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1.5px solid var(--border);
+}
+
 #links-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -229,6 +300,14 @@ input[type="file"] {
     user-select: none;
     cursor: grab;
     border: 1px solid var(--card-border);
+    /* Forest theme blur */
+    backdrop-filter: none;
+}
+body.theme-forest .link-item {
+    background: var(--card-bg);
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    border: 1.5px solid var(--card-border);
 }
 .link-item:active {
     cursor: grabbing;
@@ -311,6 +390,9 @@ input[type="file"] {
     background: rgba(30, 32, 40, 0.85);
     animation: fadeIn 0.2s;
 }
+body.theme-forest .modal {
+    background: rgba(30, 44, 32, 0.7);
+}
 @keyframes fadeIn {
     from { opacity: 0; }
     to { opacity: 1; }
@@ -323,6 +405,12 @@ input[type="file"] {
     max-width: 380px;
     border: 1px solid var(--modal-border);
     position: relative;
+    /* Forest theme blur */
+    backdrop-filter: none;
+}
+body.theme-forest .modal-content {
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
 }
 .close {
     color: var(--secondary-text);
@@ -382,6 +470,8 @@ input[type="file"] {
     font-weight: bold;
     transition: background 0.16s, border 0.16s, color 0.16s;
     font-size: 1em;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
 }
 #add-link-form button[type="submit"]:hover,
 #import-css-form button[type="submit"]:hover,
@@ -389,4 +479,20 @@ input[type="file"] {
     background: var(--accent);
     border: 1.5px solid var(--border-hover);
     color: var(--text);
+}
+body.theme-forest #add-link-form button[type="submit"],
+body.theme-forest #import-css-form button[type="submit"],
+body.theme-forest #import-css-form button[type="button"] {
+    backdrop-filter: var(--blur);
+    -webkit-backdrop-filter: var(--blur);
+    background: var(--accent);
+    color: var(--text);
+    border: 1.5px solid var(--border);
+}
+body.theme-forest #add-link-form button[type="submit"]:hover,
+body.theme-forest #import-css-form button[type="submit"]:hover,
+body.theme-forest #import-css-form button[type="button"]:hover {
+    background: var(--accent-hover);
+    border: 1.5px solid var(--border-hover);
+    color: #fff;
 }

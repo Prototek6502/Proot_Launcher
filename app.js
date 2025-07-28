@@ -12,7 +12,7 @@ function setTheme(theme) {
 }
 function applyTheme() {
     const theme = getTheme();
-    document.body.classList.remove("theme-dark", "theme-light", "theme-blue");
+    document.body.classList.remove("theme-dark", "theme-light", "theme-blue", "theme-forest");
     document.body.classList.add("theme-" + theme);
     document.getElementById("theme-select").value = theme;
 }
