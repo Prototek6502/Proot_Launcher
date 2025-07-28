@@ -12,7 +12,7 @@
         <span class="navbar-title">Launcher</span>
         <div class="navbar-actions">
             <button id="add-link-open-btn" type="button">+ Add Link</button>
-            <button id="edit-css-open-btn" type="button">Edit CSS</button>
+            <button id="import-css-open-btn" type="button">Import CSS</button>
             <button id="export-btn" type="button">Export</button>
             <label class="import-label" for="import-input">Import
                 <input type="file" id="import-input" accept=".txt">
@@ -42,12 +42,12 @@
             </form>
         </div>
     </div>
-    <!-- Modal for Editing CSS -->
-    <div id="edit-css-modal" class="modal">
+    <!-- Modal for Importing CSS -->
+    <div id="import-css-modal" class="modal">
         <div class="modal-content">
-            <span class="close" id="edit-css-close-btn">&times;</span>
-            <h2>External CSS</h2>
-            <form id="edit-css-form" autocomplete="off">
+            <span class="close" id="import-css-close-btn">&times;</span>
+            <h2>Import External CSS</h2>
+            <form id="import-css-form" autocomplete="off">
                 <input type="url" id="external-css-url" placeholder="https://yourdomain.com/styles.css">
                 <button type="submit">Apply CSS</button>
                 <button type="button" id="remove-css-btn">Remove CSS</button>
