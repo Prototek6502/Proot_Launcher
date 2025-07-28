@@ -30,7 +30,7 @@ body {
     gap: 0.5em;
 }
 #add-link-open-btn,
-#edit-css-open-btn,
+#import-css-open-btn,
 #export-btn,
 .import-label {
     background: #23242a;
@@ -46,7 +46,7 @@ body {
     display: inline-block;
 }
 #add-link-open-btn:hover,
-#edit-css-open-btn:hover,
+#import-css-open-btn:hover,
 #export-btn:hover,
 .import-label:hover {
     background: #2f3037;
@@ -224,7 +224,7 @@ input[type="file"] {
     color: #fff;
 }
 #add-link-form,
-#edit-css-form {
+#import-css-form {
     display: flex;
     flex-direction: column;
     gap: 1em;
@@ -239,7 +239,7 @@ input[type="file"] {
     font-size: 0.97em;
 }
 #add-link-form input[type="text"], #add-link-form input[type="url"],
-#edit-css-form input[type="url"] {
+#import-css-form input[type="url"] {
     padding: 0.5em;
     border: none;
     border-radius: 5px;
@@ -251,13 +251,13 @@ input[type="file"] {
     transition: background 0.2s, border 0.2s;
 }
 #add-link-form input[type="text"]:focus, #add-link-form input[type="url"]:focus,
-#edit-css-form input[type="url"]:focus {
+#import-css-form input[type="url"]:focus {
     background: #23242a;
     border: 1.5px solid #393a40;
 }
 #add-link-form button[type="submit"],
-#edit-css-form button[type="submit"],
-#edit-css-form button[type="button"] {
+#import-css-form button[type="submit"],
+#import-css-form button[type="button"] {
     background: #23242a;
     color: #f5f5f5;
     border: 1px solid #393a40;
@@ -269,8 +269,8 @@ input[type="file"] {
     font-size: 1em;
 }
 #add-link-form button[type="submit"]:hover,
-#edit-css-form button[type="submit"]:hover,
-#edit-css-form button[type="button"]:hover {
+#import-css-form button[type="submit"]:hover,
+#import-css-form button[type="button"]:hover {
     background: #2f3037;
     border: 1.5px solid #51525b;
     color: #fff;

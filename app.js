@@ -139,7 +139,7 @@ function importLinksFromFile(file) {
     reader.readAsText(file);
 }
 
-// --- Modal logic (popup for Add Link and Edit CSS) ---
+// --- Modal logic (Add Link & Import CSS) ---
 function openAddLinkModal() {
     document.getElementById('add-link-modal').style.display = "block";
     setTimeout(() => {
@@ -149,32 +149,31 @@ function openAddLinkModal() {
 function closeAddLinkModal() {
     document.getElementById('add-link-modal').style.display = "none";
     document.getElementById('add-link-form').reset();
-    // Remove any previous file
     document.getElementById('link-image-file').value = '';
     document.getElementById('link-image-url').value = '';
 }
-function openEditCSSModal() {
-    document.getElementById('edit-css-modal').style.display = "block";
+function openImportCSSModal() {
+    document.getElementById('import-css-modal').style.display = "block";
     document.getElementById('external-css-url').value = getExternalCSS();
 }
-function closeEditCSSModal() {
-    document.getElementById('edit-css-modal').style.display = "none";
-    document.getElementById('edit-css-form').reset();
+function closeImportCSSModal() {
+    document.getElementById('import-css-modal').style.display = "none";
+    document.getElementById('import-css-form').reset();
 }
 document.getElementById('add-link-open-btn').addEventListener('click', openAddLinkModal);
 document.getElementById('add-link-close-btn').addEventListener('click', closeAddLinkModal);
-document.getElementById('edit-css-open-btn').addEventListener('click', openEditCSSModal);
-document.getElementById('edit-css-close-btn').addEventListener('click', closeEditCSSModal);
+document.getElementById('import-css-open-btn').addEventListener('click', openImportCSSModal);
+document.getElementById('import-css-close-btn').addEventListener('click', closeImportCSSModal);
 window.onclick = function(event) {
     const modal1 = document.getElementById('add-link-modal');
-    const modal2 = document.getElementById('edit-css-modal');
+    const modal2 = document.getElementById('import-css-modal');
     if (event.target === modal1) closeAddLinkModal();
-    if (event.target === modal2) closeEditCSSModal();
+    if (event.target === modal2) closeImportCSSModal();
 };
 window.addEventListener('keydown', function(event) {
     if (event.key === "Escape") {
         closeAddLinkModal();
-        closeEditCSSModal();
+        closeImportCSSModal();
     }
 });
 
@@ -187,7 +186,6 @@ document.getElementById('add-link-form').addEventListener('submit', async functi
     const imageUrlInput = document.getElementById('link-image-url');
     let imageData = "";
 
-    // If user provided a file, use it, else if URL provided, use that.
     if (fileInput.files && fileInput.files.length > 0) {
         const file = fileInput.files[0];
         imageData = await new Promise(resolve => {
@@ -204,18 +202,18 @@ document.getElementById('add-link-form').addEventListener('submit', async functi
     closeAddLinkModal();
 });
 
-// --- Edit CSS Form Handler ---
-document.getElementById('edit-css-form').addEventListener('submit', function(e) {
+// --- Import CSS Form Handler ---
+document.getElementById('import-css-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const url = document.getElementById('external-css-url').value.trim();
     setExternalCSS(url);
     applyExternalCSS();
-    closeEditCSSModal();
+    closeImportCSSModal();
 });
 document.getElementById('remove-css-btn').addEventListener('click', function() {
     setExternalCSS('');
     applyExternalCSS();
-    closeEditCSSModal();
+    closeImportCSSModal();
 });
 
 // --- External CSS Logic ---
@@ -265,7 +263,6 @@ function onDrop(e) {
     this.classList.remove('drag-over');
     const targetIdx = Number(this.dataset.index);
     if (dragSrcIdx === null || dragSrcIdx === targetIdx) return false;
-    // Rearrange links
     const links = getLinks();
     const [moved] = links.splice(dragSrcIdx, 1);
     links.splice(targetIdx, 0, moved);
@@ -274,7 +271,6 @@ function onDrop(e) {
     return false;
 }
 function onDragEnd(e) {
-    // Remove all drag-over and dragging classes
     document.querySelectorAll('.link-item').forEach(item => {
         item.classList.remove('dragging','drag-over');
     });
