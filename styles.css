@@ -92,7 +92,6 @@ body.theme-blue {
     --forest-bg-image: none;
 }
 body.theme-forest {
-    /* variables */
     --bg: transparent;
     --bg-alt: transparent;
     --navbar-bg: rgba(30,44,32,0.85);
@@ -115,19 +114,27 @@ body.theme-forest {
     --blur: blur(12px);
     --forest-bg-image: url('forest_bg.png');
 }
-/* This part is required and must be outside the above block */
 
+/* Set background for body */
+body {
+    background: var(--bg);
+    min-height: 100vh;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+}
 
+/* Forest theme overrides */
 body.theme-forest {
     background-image: url('forest_bg.png');
     background-size: cover;
+    background-position: center center;
     background-attachment: fixed;
     background-repeat: no-repeat;
-    background-position: center center;
-    min-height: 100vh;
+    background-color: transparent !important;
 }
 
-
+/* NAVBAR */
 .navbar {
     background: var(--navbar-bg);
     color: var(--text);
@@ -173,6 +180,7 @@ body.theme-forest .navbar {
     gap: 0.5em;
 }
 
+/* THEME SELECT */
 #theme-select {
     padding: 0.35em 0.7em;
     border-radius: 5px;
@@ -189,7 +197,7 @@ body.theme-forest .navbar {
     background: var(--accent);
 }
 
-/* Remove background for navbar buttons */
+/* NAVBAR BUTTONS */
 #add-link-open-btn,
 #import-css-open-btn,
 #export-btn,
@@ -252,7 +260,7 @@ input[type="file"] {
     display: none;
 }
 
-/* ---- Searchbar styles ---- */
+/* SEARCHBAR */
 .searchbar-container {
     width: 100%;
     display: flex;
@@ -316,6 +324,7 @@ input[type="file"] {
     #search-btn { padding-right: 0.5em; }
 }
 
+/* SELECTION & SCROLLBAR */
 ::selection {
     background: var(--border);
     color: var(--text);
@@ -332,8 +341,9 @@ input[type="file"] {
     background: var(--accent);
 }
 
+/* LAUNCHER CONTAINER */
 .launcher-container {
-    background: transparent;
+    background: var(--card-bg);
     max-width: 500px;
     margin: 40px auto;
     margin-top: 2em;
@@ -343,12 +353,14 @@ input[type="file"] {
     backdrop-filter: none;
 }
 body.theme-forest .launcher-container {
-    background: transparent;
+    background: transparent !important;
+    box-shadow: none !important;
     backdrop-filter: var(--blur);
     -webkit-backdrop-filter: var(--blur);
     border: 1.5px solid var(--border);
 }
 
+/* LINKS LIST */
 #links-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -374,7 +386,7 @@ body.theme-forest .launcher-container {
     backdrop-filter: none;
 }
 body.theme-forest .link-item {
-    background: var(--card-bg);
+    background: rgba(44, 58, 45, 0.7);
     backdrop-filter: var(--blur);
     -webkit-backdrop-filter: var(--blur);
     border: 1.5px solid var(--card-border);
@@ -447,7 +459,7 @@ body.theme-forest .link-item {
     color: #fff;
 }
 
-/* Modal styles */
+/* MODAL */
 .modal {
     display: none;
     position: fixed;
