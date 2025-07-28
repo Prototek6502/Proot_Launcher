@@ -4,13 +4,15 @@
     <meta charset="UTF-8">
     <title>Launcher Webapp</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="styles.css">
+    <link id="main-css" rel="stylesheet" href="styles.css">
+    <link id="external-css" rel="stylesheet" href="">
 </head>
 <body>
     <nav class="navbar">
         <span class="navbar-title">Launcher</span>
         <div class="navbar-actions">
             <button id="add-link-open-btn" type="button">+ Add Link</button>
+            <button id="edit-css-open-btn" type="button">Edit CSS</button>
             <button id="export-btn" type="button">Export</button>
             <label class="import-label" for="import-input">Import
                 <input type="file" id="import-input" accept=".txt">
@@ -28,8 +30,32 @@
             <form id="add-link-form" autocomplete="off">
                 <input type="text" id="link-name" placeholder="Name" required>
                 <input type="url" id="link-url" placeholder="https://example.com" required>
+                <div class="image-input-row">
+                    <label>Image:
+                        <input type="file" id="link-image-file" accept="image/*">
+                    </label>
+                    <label>or URL:
+                        <input type="url" id="link-image-url" placeholder="https://...">
+                    </label>
+                </div>
                 <button type="submit">Add Link</button>
             </form>
+        </div>
+    </div>
+    <!-- Modal for Editing CSS -->
+    <div id="edit-css-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="edit-css-close-btn">&times;</span>
+            <h2>External CSS</h2>
+            <form id="edit-css-form" autocomplete="off">
+                <input type="url" id="external-css-url" placeholder="https://yourdomain.com/styles.css">
+                <button type="submit">Apply CSS</button>
+                <button type="button" id="remove-css-btn">Remove CSS</button>
+            </form>
+            <p style="font-size:0.95em;color:#b5b5b5;margin-top:1em;">
+                Enter the URL of a CSS file to style the launcher.<br>
+                Leave blank and click "Apply CSS" to remove.
+            </p>
         </div>
     </div>
     <script src="app.js"></script>

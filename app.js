@@ -1,4 +1,5 @@
 const LINKS_KEY = "launcher_links";
+const CSS_KEY = "launcher_external_css";
 
 // --- Data access ---
 function getLinks() {
@@ -6,6 +7,16 @@ function getLinks() {
 }
 function setLinks(links) {
     localStorage.setItem(LINKS_KEY, JSON.stringify(links));
+}
+function getExternalCSS() {
+    return localStorage.getItem(CSS_KEY) || "";
+}
+function setExternalCSS(url) {
+    if (url) {
+        localStorage.setItem(CSS_KEY, url);
+    } else {
+        localStorage.removeItem(CSS_KEY);
+    }
 }
 
 // --- Favicon helper ---
@@ -37,15 +48,26 @@ function renderLinks() {
         li.addEventListener('drop', onDrop);
         li.addEventListener('dragend', onDragEnd);
 
-        // Favicon
-        const favicon = document.createElement('img');
-        favicon.className = "link-favicon";
-        favicon.src = getFaviconUrl(item.url);
-        favicon.alt = '';
-        favicon.onerror = function() {
-            this.style.display = "none";
-        };
-        li.appendChild(favicon);
+        // Image or favicon
+        if (item.image) {
+            const image = document.createElement('img');
+            image.className = "link-image";
+            image.src = item.image;
+            image.alt = '';
+            image.onerror = function() {
+                this.style.display = "none";
+            };
+            li.appendChild(image);
+        } else {
+            const favicon = document.createElement('img');
+            favicon.className = "link-favicon";
+            favicon.src = getFaviconUrl(item.url);
+            favicon.alt = '';
+            favicon.onerror = function() {
+                this.style.display = "none";
+            };
+            li.appendChild(favicon);
+        }
 
         const a = document.createElement('a');
         a.className = "link-name";
@@ -69,9 +91,9 @@ function renderLinks() {
 }
 
 // --- Add/remove ---
-function addLink(name, url) {
+function addLink(name, url, image) {
     const links = getLinks();
-    links.push({ name, url });
+    links.push({ name, url, image });
     setLinks(links);
     renderLinks();
 }
@@ -117,7 +139,7 @@ function importLinksFromFile(file) {
     reader.readAsText(file);
 }
 
-// --- Modal logic (popup for Add Link) ---
+// --- Modal logic (popup for Add Link and Edit CSS) ---
 function openAddLinkModal() {
     document.getElementById('add-link-modal').style.display = "block";
     setTimeout(() => {
@@ -127,26 +149,89 @@ function openAddLinkModal() {
 function closeAddLinkModal() {
     document.getElementById('add-link-modal').style.display = "none";
     document.getElementById('add-link-form').reset();
+    // Remove any previous file
+    document.getElementById('link-image-file').value = '';
+    document.getElementById('link-image-url').value = '';
+}
+function openEditCSSModal() {
+    document.getElementById('edit-css-modal').style.display = "block";
+    document.getElementById('external-css-url').value = getExternalCSS();
+}
+function closeEditCSSModal() {
+    document.getElementById('edit-css-modal').style.display = "none";
+    document.getElementById('edit-css-form').reset();
 }
 document.getElementById('add-link-open-btn').addEventListener('click', openAddLinkModal);
 document.getElementById('add-link-close-btn').addEventListener('click', closeAddLinkModal);
+document.getElementById('edit-css-open-btn').addEventListener('click', openEditCSSModal);
+document.getElementById('edit-css-close-btn').addEventListener('click', closeEditCSSModal);
 window.onclick = function(event) {
-    const modal = document.getElementById('add-link-modal');
-    if (event.target === modal) {
-        closeAddLinkModal();
-    }
+    const modal1 = document.getElementById('add-link-modal');
+    const modal2 = document.getElementById('edit-css-modal');
+    if (event.target === modal1) closeAddLinkModal();
+    if (event.target === modal2) closeEditCSSModal();
 };
 window.addEventListener('keydown', function(event) {
-    if (event.key === "Escape") closeAddLinkModal();
+    if (event.key === "Escape") {
+        closeAddLinkModal();
+        closeEditCSSModal();
+    }
 });
-document.getElementById('add-link-form').addEventListener('submit', function(e) {
+
+// --- Add Link Form Handler ---
+document.getElementById('add-link-form').addEventListener('submit', async function(e) {
     e.preventDefault();
     const name = document.getElementById('link-name').value.trim();
     const url = document.getElementById('link-url').value.trim();
+    const fileInput = document.getElementById('link-image-file');
+    const imageUrlInput = document.getElementById('link-image-url');
+    let imageData = "";
+
+    // If user provided a file, use it, else if URL provided, use that.
+    if (fileInput.files && fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        imageData = await new Promise(resolve => {
+            const reader = new FileReader();
+            reader.onload = e2 => resolve(e2.target.result);
+            reader.readAsDataURL(file);
+        });
+    } else if (imageUrlInput.value.trim()) {
+        imageData = imageUrlInput.value.trim();
+    }
+
     if (!name || !url) return;
-    addLink(name, url);
+    addLink(name, url, imageData);
     closeAddLinkModal();
 });
+
+// --- Edit CSS Form Handler ---
+document.getElementById('edit-css-form').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const url = document.getElementById('external-css-url').value.trim();
+    setExternalCSS(url);
+    applyExternalCSS();
+    closeEditCSSModal();
+});
+document.getElementById('remove-css-btn').addEventListener('click', function() {
+    setExternalCSS('');
+    applyExternalCSS();
+    closeEditCSSModal();
+});
+
+// --- External CSS Logic ---
+function applyExternalCSS() {
+    const url = getExternalCSS();
+    const linkElem = document.getElementById('external-css');
+    if (url) {
+        linkElem.href = url;
+        linkElem.disabled = false;
+    } else {
+        linkElem.href = '';
+        linkElem.disabled = true;
+    }
+}
+
+// --- Export/Import ---
 document.getElementById('export-btn').addEventListener('click', exportLinks);
 document.getElementById('import-input').addEventListener('change', function(e) {
     const file = e.target.files[0];
@@ -197,4 +282,7 @@ function onDragEnd(e) {
 }
 
 // --- Init ---
-window.onload = renderLinks;
+window.onload = function() {
+    renderLinks();
+    applyExternalCSS();
+};
