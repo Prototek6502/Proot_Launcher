@@ -1,6 +1,6 @@
 body {
-    background: #181A20;
-    color: #fff;
+    background: #1a1b1f;
+    color: #f5f5f5;
     font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
     padding: 0;
@@ -8,22 +8,22 @@ body {
 
 /* Navbar styles */
 .navbar {
-    background: #23272e;
-    color: #fff;
+    background: #23242a;
+    color: #f5f5f5;
     padding: 0.8em 2em;
     display: flex;
     justify-content: space-between;
     align-items: center;
     border-radius: 0 0 14px 14px;
-    box-shadow: 0 4px 16px 0 rgba(31,38,135,0.15);
+    box-shadow: 0 2px 8px 0 rgba(30,32,40,0.15);
     position: sticky;
     top: 0;
     z-index: 10;
 }
 .navbar-title {
-    font-size: 1.5em;
-    color: #00adb5;
-    font-weight: bold;
+    font-size: 1.4em;
+    color: #f5f5f5;
+    font-weight: 600;
     letter-spacing: 1px;
 }
 .navbar-actions {
@@ -34,14 +34,14 @@ body {
 #add-link-open-btn,
 #export-btn,
 .import-label {
-    background: #00adb5;
-    color: #fff;
-    border: none;
-    padding: 0.5em 1em;
+    background: #23242a;
+    color: #f5f5f5;
+    border: 1px solid #393a40;
+    padding: 0.45em 1em;
     border-radius: 5px;
     cursor: pointer;
-    font-weight: bold;
-    transition: background 0.2s;
+    font-weight: 500;
+    transition: background 0.16s, border 0.16s, color 0.16s;
     font-size: 1em;
     margin: 0;
     display: inline-block;
@@ -49,43 +49,44 @@ body {
 #add-link-open-btn:hover,
 #export-btn:hover,
 .import-label:hover {
-    background: #008891;
+    background: #2f3037;
+    border: 1.5px solid #51525b;
+    color: #fff;
 }
 .import-label {
-    background: #393e46;
-    color: #00fff5;
+    background: #26272e;
+    color: #b5b5b5;
+    border: 1px solid #393a40;
     cursor: pointer;
-    font-weight: bold;
-    border: none;
-    transition: background 0.2s;
-    padding: 0.5em 1em;
+    font-weight: 500;
 }
 .import-label:hover {
-    background: #23272e;
+    background: #23242a;
+    color: #fff;
 }
 input[type="file"] {
     display: none;
 }
 
 ::selection {
-    background: #00adb5;
+    background: #393a40;
     color: #fff;
 }
 
 ::-webkit-scrollbar {
     width: 8px;
-    background: #23272e;
+    background: #23242a;
 }
 ::-webkit-scrollbar-thumb {
-    background: #393e46;
+    background: #393a40;
     border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #222831;
+    background: #23242a;
 }
 
 .launcher-container {
-    background: #23272e;
+    background: #23242a;
     max-width: 500px;
     margin: 40px auto;
     margin-top: 2em;
@@ -93,7 +94,6 @@ input[type="file"] {
     border-radius: 14px;
 }
 
-/* Square grid for links */
 #links-list {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
@@ -108,63 +108,64 @@ input[type="file"] {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #181A20;
+    background: #18191b;
     border-radius: 10px;
     padding: 1.2em 0.5em 0.7em 0.5em;
     min-height: 100px;
-    /* Removed box-shadow (glow effect) */
-    transition: background 0.2s;
+    transition: background 0.18s;
     position: relative;
     user-select: none;
     cursor: grab;
+    border: 1px solid #222227;
 }
 .link-item:active {
     cursor: grabbing;
 }
 .link-item.dragging {
     opacity: 0.5;
-    background: #393e46;
+    background: #32333a;
 }
 .link-item.drag-over {
-    outline: 2px dashed #00adb5;
-    background: #23272e;
+    outline: 2px dashed #51525b;
+    background: #23242a;
 }
 .link-item:hover {
-    background: #23272e;
+    background: #23242a;
 }
 
 .link-favicon {
     width: 28px;
     height: 28px;
     display: block;
-    margin: 0 auto 0.5em auto;
+    margin: 0 auto 0.45em auto;
     border-radius: 5px;
-    background: #23272e;
+    background: #23242a;
     object-fit: contain;
-    box-shadow: 0 0 0 1px #23272e;
+    box-shadow: 0 0 0 1px #23242a;
 }
 .link-name {
     text-decoration: none;
-    color: #00fff5;
-    font-size: 1.1em;
-    transition: color 0.2s;
+    color: #f5f5f5;
+    font-size: 1.05em;
+    transition: color 0.18s;
     word-break: break-all;
     text-align: center;
     margin-bottom: 0.7em;
     width: 100%;
+    font-weight: 500;
 }
 .remove-btn {
     position: absolute;
     top: 8px;
     right: 8px;
-    background: #ff2e63;
-    color: #fff;
+    background: #393a40;
+    color: #f5f5f5;
     border: none;
     border-radius: 50%;
     width: 1.7em;
     height: 1.7em;
     cursor: pointer;
-    transition: background 0.2s;
+    transition: background 0.2s, color 0.2s;
     font-size: 1.1em;
     display: flex;
     align-items: center;
@@ -172,7 +173,8 @@ input[type="file"] {
     z-index: 1;
 }
 .remove-btn:hover {
-    background: #b22234;
+    background: #7c2020;
+    color: #fff;
 }
 
 /* Modal styles */
@@ -185,7 +187,7 @@ input[type="file"] {
     width: 100vw;
     height: 100vh;
     overflow: auto;
-    background: rgba(24, 26, 32, 0.85);
+    background: rgba(30, 32, 40, 0.85);
     animation: fadeIn 0.2s;
 }
 @keyframes fadeIn {
@@ -193,16 +195,16 @@ input[type="file"] {
     to { opacity: 1; }
 }
 .modal-content {
-    background: #23272e;
+    background: #23242a;
     margin: 6% auto;
     padding: 2em 2em 1.5em 2em;
     border-radius: 14px;
     max-width: 350px;
-    border: 1px solid #23272e;
+    border: 1px solid #23242a;
     position: relative;
 }
 .close {
-    color: #aaa;
+    color: #999;
     position: absolute;
     right: 18px;
     top: 12px;
@@ -227,25 +229,28 @@ input[type="file"] {
     border-radius: 5px;
     outline: none;
     font-size: 1em;
-    background: #181A20;
-    color: #fff;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
-    transition: background 0.2s;
+    background: #18191b;
+    color: #f5f5f5;
+    border: 1px solid #23242a;
+    transition: background 0.2s, border 0.2s;
 }
 #add-link-form input[type="text"]:focus, #add-link-form input[type="url"]:focus {
-    background: #20232a;
+    background: #23242a;
+    border: 1.5px solid #393a40;
 }
 #add-link-form button[type="submit"] {
-    background: #00adb5;
-    color: #fff;
-    border: none;
+    background: #23242a;
+    color: #f5f5f5;
+    border: 1px solid #393a40;
     padding: 0.6em;
     border-radius: 5px;
     cursor: pointer;
     font-weight: bold;
-    transition: background 0.2s;
+    transition: background 0.16s, border 0.16s, color 0.16s;
     font-size: 1em;
 }
 #add-link-form button[type="submit"]:hover {
-    background: #008891;
+    background: #2f3037;
+    border: 1.5px solid #51525b;
+    color: #fff;
 }
