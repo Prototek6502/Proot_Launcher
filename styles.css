@@ -1,0 +1,160 @@
+body {
+    background: #181A20;
+    color: #fff;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+::selection {
+    background: #00adb5;
+    color: #fff;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    background: #23272e;
+}
+::-webkit-scrollbar-thumb {
+    background: #393e46;
+    border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+    background: #222831;
+}
+
+.launcher-container {
+    background: #23272e;
+    max-width: 400px;
+    margin: 40px auto;
+    padding: 2em 2em 1em 2em;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px 0 rgba(31,38,135,0.37);
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 1em;
+    color: #00adb5;
+    letter-spacing: 1px;
+}
+
+form {
+    display: flex;
+    gap: 0.5em;
+    margin-bottom: 1.5em;
+}
+
+input[type="text"], input[type="url"] {
+    flex: 1;
+    padding: 0.5em;
+    border: none;
+    border-radius: 5px;
+    outline: none;
+    font-size: 1em;
+    background: #181A20;
+    color: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    transition: background 0.2s;
+}
+
+input[type="text"]:focus, input[type="url"]:focus {
+    background: #20232a;
+}
+
+button[type="submit"], #export-btn, .import-label {
+    background: #00adb5;
+    color: #fff;
+    border: none;
+    padding: 0.5em 1em;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background 0.2s;
+    font-size: 1em;
+    margin-right: 0.5em;
+    margin-bottom: 0.5em;
+    display: inline-block;
+}
+
+button[type="submit"]:hover, #export-btn:hover, .import-label:hover {
+    background: #008891;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.config-buttons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 1em;
+    gap: 0.5em;
+}
+
+.import-label {
+    margin: 0;
+    padding: 0.5em 1em;
+    border-radius: 5px;
+    background: #393e46;
+    color: #00fff5;
+    cursor: pointer;
+    font-weight: bold;
+    border: none;
+    transition: background 0.2s;
+}
+
+.import-label:hover {
+    background: #23272e;
+}
+
+#links-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.link-item {
+    display: flex;
+    align-items: center;
+    background: #181A20;
+    margin-bottom: 0.7em;
+    border-radius: 5px;
+    padding: 0.7em;
+    transition: background 0.2s;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.10);
+}
+
+.link-item:hover {
+    background: #23272e;
+}
+
+.link-name {
+    flex: 1;
+    text-decoration: none;
+    color: #00fff5;
+    font-size: 1.1em;
+    transition: color 0.2s;
+    word-break: break-all;
+}
+
+.remove-btn {
+    margin-left: 1em;
+    background: #ff2e63;
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 2em;
+    height: 2em;
+    cursor: pointer;
+    transition: background 0.2s;
+    font-size: 1.2em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.remove-btn:hover {
+    background: #b22234;
+}
