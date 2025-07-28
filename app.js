@@ -2,6 +2,15 @@ const LINKS_KEY = "launcher_links";
 const CSS_KEY = "launcher_external_css";
 const THEME_KEY = "launcher_theme";
 
+document.addEventListener('DOMContentLoaded', function() {
+  const searchForm = document.getElementById('search-form');
+  const searchInput = document.getElementById('search-input');
+  if (searchForm && searchInput) {
+    searchForm.addEventListener('submit', function() {
+      searchInput.value = '';
+    });
+  }
+
 // --- Theme logic ---
 function getTheme() {
     return localStorage.getItem(THEME_KEY) || "dark";
@@ -303,4 +312,4 @@ window.onload = function() {
     applyTheme();
     renderLinks();
     applyExternalCSS();
-};
+};})
