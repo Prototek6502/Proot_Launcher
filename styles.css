@@ -123,7 +123,6 @@ body.theme-forest {
     background-repeat: no-repeat;
 }
 
-body,
 body.theme-forest {
     background: var(--bg);
     min-height: 100vh;
