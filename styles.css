@@ -45,7 +45,8 @@ body.theme-dark {
     --blur: initial;
     --forest-bg-image: none;
 }
-body.theme-light {
+
+/*body.theme-light {
     --bg: #f6f6fb;
     --bg-alt: #f6f6fb;
     --navbar-bg: #f6f6fb;
@@ -67,7 +68,8 @@ body.theme-light {
     --secondary-text: #888;
     --blur: initial;
     --forest-bg-image: none;
-}
+}*/
+
 body.theme-blue {
     --bg: #19202b;
     --bg-alt: #1a2533;
