@@ -123,13 +123,6 @@ body.theme-forest {
     background-repeat: no-repeat;
 }
 
-body.theme-forest {
-    background: var(--bg);
-    min-height: 100vh;
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-attachment: fixed;
-}
 
 .navbar {
     background: var(--navbar-bg);
