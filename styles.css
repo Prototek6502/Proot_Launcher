@@ -117,7 +117,7 @@ body.theme-forest {
 }
 /* This part is required and must be outside the above block */
 
-CSS
+
 body.theme-forest {
     background-image: url('forest_bg.png');
     background-size: cover;
@@ -333,7 +333,7 @@ input[type="file"] {
 }
 
 .launcher-container {
-    background: var(--bg-alt);
+    background: transparent;
     max-width: 500px;
     margin: 40px auto;
     margin-top: 2em;
@@ -343,7 +343,7 @@ input[type="file"] {
     backdrop-filter: none;
 }
 body.theme-forest .launcher-container {
-    background: var(--card-bg);
+    background: transparent;
     backdrop-filter: var(--blur);
     -webkit-backdrop-filter: var(--blur);
     border: 1.5px solid var(--border);
