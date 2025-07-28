@@ -119,16 +119,11 @@ body.theme-forest {
     --forest-bg-image: url('forest_bg.png');
 }
 
-/* Uniform backgrounds */
-body,
 body.theme-forest {
     background-image: var(--forest-bg-image);
     background-size: cover;
     background-attachment: fixed;
     background-repeat: no-repeat;
-}
-body.theme-forest {
-    background-image: var(--forest-bg-image);
 }
 
 .navbar {
