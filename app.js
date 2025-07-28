@@ -1,5 +1,21 @@
 const LINKS_KEY = "launcher_links";
 const CSS_KEY = "launcher_external_css";
+const THEME_KEY = "launcher_theme";
+
+// --- Theme logic ---
+function getTheme() {
+    return localStorage.getItem(THEME_KEY) || "dark";
+}
+function setTheme(theme) {
+    localStorage.setItem(THEME_KEY, theme);
+    applyTheme();
+}
+function applyTheme() {
+    const theme = getTheme();
+    document.body.classList.remove("theme-dark", "theme-light", "theme-blue");
+    document.body.classList.add("theme-" + theme);
+    document.getElementById("theme-select").value = theme;
+}
 
 // --- Data access ---
 function getLinks() {
@@ -202,6 +218,11 @@ document.getElementById('add-link-form').addEventListener('submit', async functi
     closeAddLinkModal();
 });
 
+// --- Theme dropdown ---
+document.getElementById('theme-select').addEventListener('change', function(e) {
+    setTheme(e.target.value);
+});
+
 // --- Import CSS Form Handler ---
 document.getElementById('import-css-form').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -279,6 +300,7 @@ function onDragEnd(e) {
 
 // --- Init ---
 window.onload = function() {
+    applyTheme();
     renderLinks();
     applyExternalCSS();
 };

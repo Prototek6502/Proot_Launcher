@@ -1,13 +1,99 @@
+:root {
+    --bg: #1a1b1f;
+    --bg-alt: #1a1b1f;
+    --navbar-bg: #1a1b1f;
+    --card-bg: #23242a;
+    --text: #f5f5f5;
+    --border: #393a40;
+    --border-hover: #51525b;
+    --card-border: #222227;
+    --accent: #2f3037;
+    --accent-hover: #32333a;
+    --remove-btn: #393a40;
+    --remove-btn-hover: #7c2020;
+    --input-bg: #18191b;
+    --input-border: #23242a;
+    --input-border-focus: #393a40;
+    --modal-bg: #1a1b1f;
+    --modal-content-bg: #23242a;
+    --modal-border: #23242a;
+    --secondary-text: #b5b5b5;
+}
+body.theme-dark {
+    --bg: #1a1b1f;
+    --bg-alt: #1a1b1f;
+    --navbar-bg: #1a1b1f;
+    --card-bg: #23242a;
+    --text: #f5f5f5;
+    --border: #393a40;
+    --border-hover: #51525b;
+    --card-border: #222227;
+    --accent: #2f3037;
+    --accent-hover: #32333a;
+    --remove-btn: #393a40;
+    --remove-btn-hover: #7c2020;
+    --input-bg: #18191b;
+    --input-border: #23242a;
+    --input-border-focus: #393a40;
+    --modal-bg: #1a1b1f;
+    --modal-content-bg: #23242a;
+    --modal-border: #23242a;
+    --secondary-text: #b5b5b5;
+}
+body.theme-light {
+    --bg: #f6f6fb;
+    --bg-alt: #f6f6fb;
+    --navbar-bg: #f6f6fb;
+    --card-bg: #fff;
+    --text: #23242a;
+    --border: #dadada;
+    --border-hover: #b5b5b5;
+    --card-border: #ececec;
+    --accent: #e8e8f3;
+    --accent-hover: #dadada;
+    --remove-btn: #ececec;
+    --remove-btn-hover: #e57373;
+    --input-bg: #fafafa;
+    --input-border: #dadada;
+    --input-border-focus: #b5b5b5;
+    --modal-bg: #f6f6fb;
+    --modal-content-bg: #fff;
+    --modal-border: #ececec;
+    --secondary-text: #888;
+}
+body.theme-blue {
+    --bg: #19202b;
+    --bg-alt: #1a2533;
+    --navbar-bg: #19202b;
+    --card-bg: #24344d;
+    --text: #e7f0fa;
+    --border: #2e3a4c;
+    --border-hover: #4a7ebe;
+    --card-border: #25314a;
+    --accent: #25406a;
+    --accent-hover: #3461a4;
+    --remove-btn: #25406a;
+    --remove-btn-hover: #e57373;
+    --input-bg: #232e41;
+    --input-border: #2e3a4c;
+    --input-border-focus: #4a7ebe;
+    --modal-bg: #19202b;
+    --modal-content-bg: #24344d;
+    --modal-border: #2e3a4c;
+    --secondary-text: #a1b6d6;
+}
+
 body {
-    background: #1a1b1f;
-    color: #f5f5f5;
+    background: var(--bg);
+    color: var(--text);
     font-family: 'Segoe UI', Arial, sans-serif;
     margin: 0;
     padding: 0;
 }
+
 .navbar {
-    background: #23242a;
-    color: #f5f5f5;
+    background: var(--navbar-bg);
+    color: var(--text);
     padding: 0.8em 2em;
     display: flex;
     justify-content: space-between;
@@ -20,7 +106,7 @@ body {
 }
 .navbar-title {
     font-size: 1.4em;
-    color: #f5f5f5;
+    color: var(--text);
     font-weight: 600;
     letter-spacing: 1px;
     display: flex;
@@ -42,13 +128,29 @@ body {
     align-items: center;
     gap: 0.5em;
 }
+#theme-select {
+    padding: 0.35em 0.7em;
+    border-radius: 5px;
+    border: 1px solid var(--border);
+    font-size: 1em;
+    background: var(--card-bg);
+    color: var(--text);
+    margin-right: 0.7em;
+    transition: border 0.18s, background 0.18s, color 0.18s;
+}
+#theme-select:focus {
+    border: 1.5px solid var(--border-hover);
+    outline: none;
+    background: var(--accent);
+}
+
 #add-link-open-btn,
 #import-css-open-btn,
 #export-btn,
 .import-label {
-    background: #23242a;
-    color: #f5f5f5;
-    border: 1px solid #393a40;
+    background: var(--card-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
     padding: 0.45em 1em;
     border-radius: 5px;
     cursor: pointer;
@@ -62,43 +164,43 @@ body {
 #import-css-open-btn:hover,
 #export-btn:hover,
 .import-label:hover {
-    background: #2f3037;
-    border: 1.5px solid #51525b;
-    color: #fff;
+    background: var(--accent);
+    border: 1.5px solid var(--border-hover);
+    color: var(--text);
 }
 .import-label {
-    background: #26272e;
-    color: #b5b5b5;
-    border: 1px solid #393a40;
+    background: var(--card-bg);
+    color: var(--secondary-text);
+    border: 1px solid var(--border);
     cursor: pointer;
     font-weight: 500;
 }
 .import-label:hover {
-    background: #23242a;
-    color: #fff;
+    background: var(--accent);
+    color: var(--text);
 }
 input[type="file"] {
     display: none;
 }
 
 ::selection {
-    background: #393a40;
-    color: #fff;
+    background: var(--border);
+    color: var(--text);
 }
 ::-webkit-scrollbar {
     width: 8px;
-    background: #23242a;
+    background: var(--card-bg);
 }
 ::-webkit-scrollbar-thumb {
-    background: #393a40;
+    background: var(--border);
     border-radius: 4px;
 }
 ::-webkit-scrollbar-thumb:hover {
-    background: #23242a;
+    background: var(--accent);
 }
 
 .launcher-container {
-    background: #23242a;
+    background: var(--bg-alt);
     max-width: 500px;
     margin: 40px auto;
     margin-top: 2em;
@@ -118,7 +220,7 @@ input[type="file"] {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: #18191b;
+    background: var(--card-bg);
     border-radius: 10px;
     padding: 1.2em 0.5em 0.7em 0.5em;
     min-height: 100px;
@@ -126,21 +228,21 @@ input[type="file"] {
     position: relative;
     user-select: none;
     cursor: grab;
-    border: 1px solid #222227;
+    border: 1px solid var(--card-border);
 }
 .link-item:active {
     cursor: grabbing;
 }
 .link-item.dragging {
     opacity: 0.5;
-    background: #32333a;
+    background: var(--accent-hover);
 }
 .link-item.drag-over {
-    outline: 2px dashed #51525b;
-    background: #23242a;
+    outline: 2px dashed var(--border-hover);
+    background: var(--accent);
 }
 .link-item:hover {
-    background: #23242a;
+    background: var(--accent);
 }
 .link-image {
     width: 38px;
@@ -148,9 +250,9 @@ input[type="file"] {
     display: block;
     margin: 0 auto 0.5em auto;
     border-radius: 7px;
-    background: #23242a;
+    background: var(--card-bg);
     object-fit: cover;
-    box-shadow: 0 0 0 1px #23242a;
+    box-shadow: 0 0 0 1px var(--card-bg);
 }
 .link-favicon {
     width: 28px;
@@ -158,13 +260,13 @@ input[type="file"] {
     display: block;
     margin: 0 auto 0.45em auto;
     border-radius: 5px;
-    background: #23242a;
+    background: var(--card-bg);
     object-fit: contain;
-    box-shadow: 0 0 0 1px #23242a;
+    box-shadow: 0 0 0 1px var(--card-bg);
 }
 .link-name {
     text-decoration: none;
-    color: #f5f5f5;
+    color: var(--text);
     font-size: 1.05em;
     transition: color 0.18s;
     word-break: break-all;
@@ -177,8 +279,8 @@ input[type="file"] {
     position: absolute;
     top: 8px;
     right: 8px;
-    background: #393a40;
-    color: #f5f5f5;
+    background: var(--remove-btn);
+    color: var(--text);
     border: none;
     border-radius: 50%;
     width: 1.7em;
@@ -192,7 +294,7 @@ input[type="file"] {
     z-index: 1;
 }
 .remove-btn:hover {
-    background: #7c2020;
+    background: var(--remove-btn-hover);
     color: #fff;
 }
 
@@ -214,16 +316,16 @@ input[type="file"] {
     to { opacity: 1; }
 }
 .modal-content {
-    background: #23242a;
+    background: var(--modal-content-bg);
     margin: 6% auto;
     padding: 2em 2em 1.5em 2em;
     border-radius: 14px;
     max-width: 380px;
-    border: 1px solid #23242a;
+    border: 1px solid var(--modal-border);
     position: relative;
 }
 .close {
-    color: #999;
+    color: var(--secondary-text);
     position: absolute;
     right: 18px;
     top: 12px;
@@ -234,7 +336,7 @@ input[type="file"] {
     user-select: none;
 }
 .close:hover, .close:focus {
-    color: #fff;
+    color: var(--text);
 }
 #add-link-form,
 #import-css-form {
@@ -258,22 +360,22 @@ input[type="file"] {
     border-radius: 5px;
     outline: none;
     font-size: 1em;
-    background: #18191b;
-    color: #f5f5f5;
-    border: 1px solid #23242a;
+    background: var(--input-bg);
+    color: var(--text);
+    border: 1px solid var(--input-border);
     transition: background 0.2s, border 0.2s;
 }
 #add-link-form input[type="text"]:focus, #add-link-form input[type="url"]:focus,
 #import-css-form input[type="url"]:focus {
-    background: #23242a;
-    border: 1.5px solid #393a40;
+    background: var(--card-bg);
+    border: 1.5px solid var(--input-border-focus);
 }
 #add-link-form button[type="submit"],
 #import-css-form button[type="submit"],
 #import-css-form button[type="button"] {
-    background: #23242a;
-    color: #f5f5f5;
-    border: 1px solid #393a40;
+    background: var(--card-bg);
+    color: var(--text);
+    border: 1px solid var(--border);
     padding: 0.6em;
     border-radius: 5px;
     cursor: pointer;
@@ -284,7 +386,7 @@ input[type="file"] {
 #add-link-form button[type="submit"]:hover,
 #import-css-form button[type="submit"]:hover,
 #import-css-form button[type="button"]:hover {
-    background: #2f3037;
-    border: 1.5px solid #51525b;
-    color: #fff;
+    background: var(--accent);
+    border: 1.5px solid var(--border-hover);
+    color: var(--text);
 }
