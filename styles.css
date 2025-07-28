@@ -434,3 +434,20 @@ body.theme-forest #import-css-form button[type="button"]:hover {
     border: 1.5px solid var(--border-hover);
     color: #fff;
 }
+
+
+/* Make link buttons transparent when there are no links */
+#links-list:empty::before {
+    content: "";
+    display: none;
+}
+
+/* Remove background, border, and shadow for empty state */
+#links-list:empty {
+    background: none !important;
+    box-shadow: none !important;
+    border: none !important;
+    min-height: 0;
+    padding: 0;
+    margin: 0;
+}
