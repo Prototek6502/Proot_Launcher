@@ -85,13 +85,42 @@ function importLinksFromFile(file) {
     reader.readAsText(file);
 }
 
+// Modal logic
+function openAddLinkModal() {
+    document.getElementById('add-link-modal').style.display = "block";
+    setTimeout(() => {
+        document.getElementById('link-name').focus();
+    }, 150);
+}
+function closeAddLinkModal() {
+    document.getElementById('add-link-modal').style.display = "none";
+    document.getElementById('add-link-form').reset();
+}
+
+// Add event listeners for modal open/close
+document.getElementById('add-link-open-btn').addEventListener('click', openAddLinkModal);
+document.getElementById('add-link-close-btn').addEventListener('click', closeAddLinkModal);
+
+// Close modal when clicking outside modal content
+window.onclick = function(event) {
+    const modal = document.getElementById('add-link-modal');
+    if (event.target === modal) {
+        closeAddLinkModal();
+    }
+};
+
+// Allow ESC key to close modal
+window.addEventListener('keydown', function(event) {
+    if (event.key === "Escape") closeAddLinkModal();
+});
+
 document.getElementById('add-link-form').addEventListener('submit', function(e) {
     e.preventDefault();
     const name = document.getElementById('link-name').value.trim();
     const url = document.getElementById('link-url').value.trim();
     if (!name || !url) return;
     addLink(name, url);
-    this.reset();
+    closeAddLinkModal();
 });
 
 document.getElementById('export-btn').addEventListener('click', exportLinks);

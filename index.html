@@ -2,25 +2,35 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Proto Launcher</title>
+    <title>Launcher Webapp</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <div class="launcher-container">
-        <h1>Proto Launcher</h1>
-        <form id="add-link-form" autocomplete="off">
-            <input type="text" id="link-name" placeholder="Name" required>
-            <input type="url" id="link-url" placeholder="https://example.com" required>
-            <button type="submit">Add Link</button>
-        </form>
-        <div class="config-buttons">
-            <button id="export-btn" type="button">Export Links</button>
-            <label class="import-label" for="import-input">Import Links
+    <nav class="navbar">
+        <span class="navbar-title">Launcher</span>
+        <div class="navbar-actions">
+            <button id="add-link-open-btn" type="button">+ Add Link</button>
+            <button id="export-btn" type="button">Export</button>
+            <label class="import-label" for="import-input">Import
                 <input type="file" id="import-input" accept=".txt">
             </label>
         </div>
+    </nav>
+    <div class="launcher-container">
         <ul id="links-list"></ul>
+    </div>
+    <!-- Popup Modal for Adding Link -->
+    <div id="add-link-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" id="add-link-close-btn">&times;</span>
+            <h2>Add Link</h2>
+            <form id="add-link-form" autocomplete="off">
+                <input type="text" id="link-name" placeholder="Name" required>
+                <input type="url" id="link-url" placeholder="https://example.com" required>
+                <button type="submit">Add Link</button>
+            </form>
+        </div>
     </div>
     <script src="app.js"></script>
 </body>
