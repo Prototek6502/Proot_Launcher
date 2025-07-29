@@ -36,7 +36,7 @@
         font-size:1em;
         font-weight:500;
       ">
-        <span style="font-size:1em;">Usage Graph</span>
+        <span style="font-size:1em;">CPU Usage Graph</span>
         <span style="display:flex;gap:6px;">
           <button id="${instanceId}-minimise" style="
             background:none;border:none;color:var(--text,#eee);font-size:1.1em;cursor:pointer;padding:0;" title="Minimize">
@@ -66,7 +66,7 @@
         data: {
             labels: [], // X-axis labels
             datasets: [{
-                label: 'Usage Data',
+                label: 'CPU Usage (%)',
                 data: [], // Y-axis data
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -76,7 +76,7 @@
         },
         options: {
             responsive: true,
-            maintainAspectRatio: false, // Prevents the graph from resizing unexpectedly
+            maintainAspectRatio: false,
             scales: {
                 x: {
                     title: {
@@ -88,7 +88,9 @@
                     title: {
                         display: true,
                         text: 'Usage'
-                    }
+                    },
+                    min: 0,
+                    max: 100
                 }
             }
         }
@@ -101,11 +103,17 @@
         chart.update();
     }
 
-    // Example usage: Update the graph every second with random data
+    // Function to simulate CPU usage retrieval
+    function getCpuUsage() {
+        // Simulate CPU usage data (replace this with actual data retrieval logic if available)
+        return Math.floor(Math.random() * 100); // Random usage data between 0 and 100
+    }
+
+    // Update the graph every second with simulated CPU usage data
     setInterval(() => {
         const now = new Date().toLocaleTimeString();
-        const randomUsage = Math.floor(Math.random() * 100); // Random usage data
-        updateGraph(now, randomUsage);
+        const cpuUsage = getCpuUsage(); // Get simulated CPU usage
+        updateGraph(now, cpuUsage);
     }, 1000);
 
     // Minimize logic
