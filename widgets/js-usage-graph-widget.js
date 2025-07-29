@@ -104,10 +104,13 @@
     }
 
     // Function to simulate CPU usage retrieval
+    // Function to simulate CPU usage retrieval
     function getCpuUsage() {
-        // Simulate CPU usage data (replace this with actual data retrieval logic if available)
-        return Math.floor(Math.random() * 100); // Random usage data between 0 and 100
-    }
+    // Get the number of logical processors
+    const logicalProcessors = navigator.hardwareConcurrency || 1; // Default to 1 if not available
+    // Simulate CPU usage as a percentage of logical processors
+    return Math.floor(Math.random() * 100); // Random usage data between 0 and 100
+}
 
     // Update the graph every second with simulated CPU usage data
     setInterval(() => {
