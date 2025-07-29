@@ -305,14 +305,3 @@ window.onload = function() {
     renderLinks();
     applyExternalCSS();
 };})
-
-
-document.addEventListener('DOMContentLoaded', function() {
-  const searchForm = document.getElementById('search-form');
-  const searchInput = document.getElementById('search-input');
-  if (searchForm && searchInput) {
-    searchForm.addEventListener('submit', function() {
-
-      searchInput.value = '';
-    });
-  }
