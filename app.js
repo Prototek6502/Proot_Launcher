@@ -263,6 +263,40 @@ document.getElementById('widgets-save-btn').addEventListener('click', function()
     document.getElementById('widgets-modal').style.display = "none";
 });
 
+document.getElementById('widgets-center-btn').addEventListener('click', function() {
+    // List widget IDs you want to center
+    const widgetIds = [
+        'clock-window-widget',
+        'js-console-window-widget',
+        // Add more widget IDs here if needed
+    ];
+
+    widgetIds.forEach(function(id) {
+        const widget = document.getElementById(id);
+        if (widget) {
+            // Calculate center position
+            const width = widget.offsetWidth;
+            const height = widget.offsetHeight;
+            const left = Math.max(0, (window.innerWidth - width) / 2);
+            const top = Math.max(0, (window.innerHeight - height) / 2);
+            widget.style.left = left + 'px';
+            widget.style.top = top + 'px';
+
+            // Optionally, update position in localStorage so it persists
+            const posKey = id === 'clock-window-widget'
+                ? 'clock-window-pos'
+                : id === 'js-console-window-widget'
+                    ? 'js-console-window-pos'
+                    : id + '-pos';
+            localStorage.setItem(posKey, JSON.stringify({
+                left: widget.style.left,
+                top: widget.style.top
+            }));
+        }
+    });
+});
+
+
 window.addEventListener('click', function(event) {
     const widgetsModal = document.getElementById('widgets-modal');
     if (event.target === widgetsModal) widgetsModal.style.display = "none";
