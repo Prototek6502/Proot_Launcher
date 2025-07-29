@@ -305,3 +305,17 @@ window.onload = function() {
     renderLinks();
     applyExternalCSS();
 };})
+
+document.addEventListener('DOMContentLoaded', function() {
+  const searchForm = document.getElementById('search-form');
+  const searchInput = document.getElementById('search-input');
+  if (searchForm && searchInput) {
+    searchForm.addEventListener('submit', function() {
+      setTimeout(() => {
+        searchInput.value = '';
+      }, 50); // Let the form submit and open the DuckDuckGo page, then clear the input
+    });
+  }
+
+  // ...rest of your existing code...
+});
