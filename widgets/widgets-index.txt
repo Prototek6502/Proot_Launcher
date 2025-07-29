@@ -1,2 +1,2 @@
-clock.js
+clock-window-widget.js
 js-console.js
