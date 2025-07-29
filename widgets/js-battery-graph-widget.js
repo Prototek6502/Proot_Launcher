@@ -1,12 +1,12 @@
 (function() {
     // Remove previous instance if exists
-    const old = document.getElementById('js-usage-graph-widget');
+    const old = document.getElementById('js-battery-graph-widget');
     if (old) old.remove();
 
     // Create widget DOM
     const widgetDiv = document.createElement('div');
-    widgetDiv.id = 'js-usage-graph-widget';
-    widgetDiv.className = 'widget js-usage-graph-widget';
+    widgetDiv.id = 'js-battery-graph-widget';
+    widgetDiv.className = 'widget js-battery-graph-widget';
     widgetDiv.style.position = 'absolute';
     widgetDiv.style.top = '180px';
     widgetDiv.style.left = '80px';
@@ -21,10 +21,10 @@
     widgetDiv.style.userSelect = 'none';
 
     // Unique widget instance ID for graph
-    const instanceId = 'js-usage-graph-' + Math.random().toString(36).slice(2);
+    const instanceId = 'js-battery-graph-' + Math.random().toString(36).slice(2);
 
     widgetDiv.innerHTML = `
-      <div class="js-usage-graph-header" style="
+      <div class="js-battery-graph-header" style="
         display:flex;
         align-items:center;
         justify-content:space-between;
@@ -36,7 +36,7 @@
         font-size:1em;
         font-weight:500;
       ">
-        <span style="font-size:1em;">CPU Usage Graph</span>
+        <span style="font-size:1em;">Battery Status Graph</span>
         <span style="display:flex;gap:6px;">
           <button id="${instanceId}-minimise" style="
             background:none;border:none;color:var(--text,#eee);font-size:1.1em;cursor:pointer;padding:0;" title="Minimize">
@@ -66,7 +66,7 @@
         data: {
             labels: [], // X-axis labels
             datasets: [{
-                label: 'CPU Usage (%)',
+                label: 'Battery Level (%)',
                 data: [], // Y-axis data
                 borderColor: 'rgba(75, 192, 192, 1)',
                 backgroundColor: 'rgba(75, 192, 192, 0.2)',
@@ -87,7 +87,7 @@
                 y: {
                     title: {
                         display: true,
-                        text: 'Usage'
+                        text: 'Battery Level (%)'
                     },
                     min: 0,
                     max: 100
@@ -103,18 +103,22 @@
         chart.update();
     }
 
-    // Function to simulate CPU usage retrieval
-    // Function to simulate CPU usage retrieval
-    function getCpuUsage() {
-    // Get the number of logical processors
-    const logicalProcessors = navigator.hardwareConcurrency || 1; // Default to 1 if not available
+    // Function to get battery status
+    async function getBatteryStatus() {
+    try {
+        const battery = await navigator.getBattery();
+        return Math.floor(battery.level * 100); // Return battery level as a percentage
+    } catch (error) {
+        console.error("Battery status not available:", error);
+        return 0; // Return 0 if battery status is not available
+    }
 }
 
-    // Update the graph every second with simulated CPU usage data
-    setInterval(() => {
+    // Update the graph every second with battery status data
+    setInterval(async () => {
         const now = new Date().toLocaleTimeString();
-        const cpuUsage = getCpuUsage(); // Get simulated CPU usage
-        updateGraph(now, cpuUsage);
+       const batteryLevel = await getBatteryStatus(); // Get battery status
+       updateGraph(now, batteryLevel);
     }, 1000);
 
     // Minimize logic
@@ -139,7 +143,7 @@
 
     // Drag logic
     let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
-    const header = widgetDiv.querySelector('.js-usage-graph-header');
+    const header = widgetDiv.querySelector('.js-battery-graph-header');
 
     header.addEventListener('mousedown', function(e) {
         if (e.target === minimiseBtn || e.target === widgetDiv.querySelector(`#${instanceId}-close`)) return;
@@ -200,14 +204,14 @@
 
     // Save position in localStorage
     function savePos() {
-        localStorage.setItem('js-usage-graph-window-pos', JSON.stringify({
+        localStorage.setItem('js-battery-graph-window-pos', JSON.stringify({
             left: widgetDiv.style.left,
             top: widgetDiv.style.top
         }));
     }
     function loadPos() {
         try {
-            const pos = JSON.parse(localStorage.getItem('js-usage-graph-window-pos') || '{}');
+            const pos = JSON.parse(localStorage.getItem('js-battery-graph-window-pos') || '{}');
             if (pos.left) widgetDiv.style.left = pos.left;
             if (pos.top) widgetDiv.style.top = pos.top;
         } catch {}
