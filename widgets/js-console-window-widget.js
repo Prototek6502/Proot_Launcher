@@ -20,6 +20,9 @@
     widgetDiv.style.zIndex = 1001;
     widgetDiv.style.userSelect = 'none';
 
+    // Unique widget instance ID for console hook
+    const instanceId = 'js-console-' + Math.random().toString(36).slice(2);
+
     widgetDiv.innerHTML = `
       <div class="js-console-window-header" style="
         display:flex;
@@ -35,20 +38,18 @@
       ">
         <span style="font-size:1em;">🖥️ JS Console</span>
         <span style="display:flex;gap:6px;">
-          <button id="js-console-window-minimise" style="
+          <button id="${instanceId}-minimise" style="
             background:none;border:none;color:var(--text,#eee);font-size:1.1em;cursor:pointer;padding:0;" title="Minimize">
-            <span id="js-console-window-minimise-icon" style="display:inline-block;">&#8212;</span>
+            <span id="${instanceId}-minimise-icon" style="display:inline-block;">&#8212;</span>
           </button>
-          <button id="js-console-window-close" style="
+          <button id="${instanceId}-close" style="
             background:none;border:none;color:var(--text,#eee);font-size:1.1em;cursor:pointer;margin-left:5px;padding:0;" title="Close">&times;</button>
         </span>
       </div>
-      <div id="js-console-window-body" style="
-        padding:10px 9px;
-      ">
-        <div id="js-console-output" style="background:#222;color:#eee;height:70px;overflow-y:auto;padding:6px;border-radius:6px;font-size:0.95em;margin-bottom:0.6em;"></div>
-        <form id="js-console-form" style="display:flex;gap:0.5em;">
-            <input id="js-console-input" type="text" placeholder="Type JS..." autocomplete="off" style="flex:1;padding:5px;border-radius:4px;border:1px solid #555;background:#333;color:#fff;">
+      <div id="${instanceId}-body" style="padding:10px 9px;">
+        <div id="${instanceId}-output" style="background:#222;color:#eee;height:70px;overflow-y:auto;padding:6px;border-radius:6px;font-size:0.95em;margin-bottom:0.6em;"></div>
+        <form id="${instanceId}-form" style="display:flex;gap:0.5em;">
+            <input id="${instanceId}-input" type="text" placeholder="Type JS..." autocomplete="off" style="flex:1;padding:5px;border-radius:4px;border:1px solid #555;background:#333;color:#fff;">
             <button type="submit" style="padding:5px 10px;border-radius:4px;border:none;background:#555;color:#fff;">Run</button>
         </form>
       </div>
@@ -63,9 +64,9 @@
     }
 
     // JS Console logic
-    const outputDiv = widgetDiv.querySelector('#js-console-output');
-    const form = widgetDiv.querySelector('#js-console-form');
-    const input = widgetDiv.querySelector('#js-console-input');
+    const outputDiv = widgetDiv.querySelector(`#${instanceId}-output`);
+    const form = widgetDiv.querySelector(`#${instanceId}-form`);
+    const input = widgetDiv.querySelector(`#${instanceId}-input`);
 
     function printToConsole(type, msg) {
         const entry = document.createElement('div');
@@ -75,25 +76,45 @@
         outputDiv.scrollTop = outputDiv.scrollHeight;
     }
 
-    // Hook console.* (once per session)
+    // Only hook once per session, but also tag output for this widget only
     if (!window._jsConsoleWidgetHooked) {
-        window._jsConsoleWidgetHooked = true;
+        window._jsConsoleWidgetHooked = [];
+    }
+    if (!window._jsConsoleWidgetHooked.includes(instanceId)) {
+        window._jsConsoleWidgetHooked.push(instanceId);
         ['log', 'error', 'warn'].forEach(method => {
             const orig = console[method];
             console[method] = function(...args) {
-                printToConsole(method, args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' '));
+                // Print to all open widgets
+                document.querySelectorAll('.js-console-window-widget').forEach(wdiv => {
+                    const od = wdiv.querySelector('div[id$="-output"]');
+                    if (od) {
+                        const entry = document.createElement('div');
+                        entry.textContent = `[${method}] ${args.map(a => typeof a === 'object' ? JSON.stringify(a) : String(a)).join(' ')}`;
+                        entry.style.wordBreak = 'break-all';
+                        od.appendChild(entry);
+                        od.scrollTop = od.scrollHeight;
+                    }
+                });
                 orig.apply(console, args);
             };
         });
     }
 
+    // Run JS on submit
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         const code = input.value;
         if (!code.trim()) return;
         printToConsole('input', code);
         try {
-            let result = Function('"use strict";return (' + code + ')')();
+            let result;
+            // Try as an expression first, fallback to statement
+            try {
+                result = Function('"use strict";return (' + code + ')')();
+            } catch {
+                result = Function('"use strict";' + code)();
+            }
             printToConsole('result', typeof result === 'object' ? JSON.stringify(result) : String(result));
         } catch (err) {
             printToConsole('error', err.message);
@@ -103,18 +124,18 @@
 
     // Minimize logic
     let isMinimized = false;
-    const bodyDiv = widgetDiv.querySelector('#js-console-window-body');
-    const minimiseBtn = widgetDiv.querySelector('#js-console-window-minimise');
-    const minimiseIcon = widgetDiv.querySelector('#js-console-window-minimise-icon');
+    const bodyDiv = widgetDiv.querySelector(`#${instanceId}-body`);
+    const minimiseBtn = widgetDiv.querySelector(`#${instanceId}-minimise`);
+    const minimiseIcon = widgetDiv.querySelector(`#${instanceId}-minimise-icon`);
     minimiseBtn.onclick = function(e) {
         e.stopPropagation();
         isMinimized = !isMinimized;
         bodyDiv.style.display = isMinimized ? "none" : "";
-        minimiseIcon.innerHTML = isMinimized ? "&#x25A1;" : "&#8212;"; // restore/minimize icons
+        minimiseIcon.innerHTML = isMinimized ? "&#x25A1;" : "&#8212;";
     };
 
     // Close logic: disables the widget and reloads (removes from enabled list)
-    widgetDiv.querySelector('#js-console-window-close').onclick = function(e) {
+    widgetDiv.querySelector(`#${instanceId}-close`).onclick = function(e) {
         e.stopPropagation();
         // Remove this widget from enabled list and reload
         try {
@@ -129,6 +150,7 @@
                 localStorage.setItem(WIDGETS_KEY, JSON.stringify(enabled));
             }
         } catch {}
+        widgetDiv.remove();
         window.location.reload();
     };
 
@@ -137,7 +159,7 @@
     const header = widgetDiv.querySelector('.js-console-window-header');
 
     header.addEventListener('mousedown', function(e) {
-        if (e.target === minimiseBtn || e.target === widgetDiv.querySelector('#js-console-window-close')) return;
+        if (e.target === minimiseBtn || e.target === widgetDiv.querySelector(`#${instanceId}-close`)) return;
         isDragging = true;
         dragOffsetX = e.clientX - widgetDiv.offsetLeft;
         dragOffsetY = e.clientY - widgetDiv.offsetTop;
@@ -167,7 +189,7 @@
 
     // Touch support
     header.addEventListener('touchstart', function(e) {
-        if (!e.touches[0] || e.target === minimiseBtn || e.target === widgetDiv.querySelector('#js-console-window-close')) return;
+        if (!e.touches[0] || e.target === minimiseBtn || e.target === widgetDiv.querySelector(`#${instanceId}-close`)) return;
         isDragging = true;
         dragOffsetX = e.touches[0].clientX - widgetDiv.offsetLeft;
         dragOffsetY = e.touches[0].clientY - widgetDiv.offsetTop;
@@ -208,9 +230,4 @@
         } catch {}
     }
     loadPos();
-
-    // Clean up logic if needed
-    widgetDiv.addEventListener('remove', function() {
-        // No interval to clear, but could clear event listeners if needed here.
-    });
 })();
