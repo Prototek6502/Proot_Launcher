@@ -1,4 +1,3 @@
 clock-window-widget.js
 js-console-window-widget.js
 js-battery-graph-widget.js
-js-music-player-widget.js
