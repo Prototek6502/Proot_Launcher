@@ -2,7 +2,6 @@ const LINKS_KEY = "launcher_links";
 const CSS_KEY = "launcher_external_css";
 const THEME_KEY = "launcher_theme";
 
-
 // --- Theme logic ---
 function getTheme() {
     return localStorage.getItem(THEME_KEY) || "dark";
@@ -305,4 +304,17 @@ window.onload = function() {
     applyTheme();
     renderLinks();
     applyExternalCSS();
-};})
+};
+
+// --- Searchbar clear after submit (safe for themes/modals) ---
+document.addEventListener('DOMContentLoaded', function() {
+    const searchForm = document.getElementById('search-form');
+    const searchInput = document.getElementById('search-input');
+    if (searchForm && searchInput) {
+        searchForm.addEventListener('submit', function() {
+            setTimeout(() => {
+                searchInput.value = '';
+            }, 100); // Let form submit and open new tab, then clear the input
+        });
+    }
+});
