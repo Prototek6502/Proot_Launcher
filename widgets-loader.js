@@ -1,5 +1,5 @@
 (async function() {
-    // Create or clear the widgets container
+    // Ensure a single container exists for widgets
     let container = document.getElementById('widgets-container');
     if (!container) {
         container = document.createElement('div');
@@ -20,20 +20,19 @@
             .filter(l => l && !l.startsWith('#') && l.endsWith('.js'));
     } catch (err) {
         console.error("Cannot load widgets-index.txt:", err);
-        return; // Abort if index file missing
+        return;
     }
 
-    // Get enabled widgets from localStorage, fallback to allWidgets if none enabled
+    // Get enabled widgets
     let enabled = [];
     try {
         enabled = JSON.parse(localStorage.getItem("launcher_widgets_enabled") || "[]");
     } catch {}
     if (!Array.isArray(enabled) || enabled.length === 0) enabled = allWidgets;
 
-    // Load each enabled widget as a script
+    // Only load widgets that are both enabled and present in index
     for (const widgetFile of enabled) {
-        if (!widgetFile.endsWith('.js')) continue; // Only JS files
-        if (!allWidgets.includes(widgetFile)) continue; // Only allow valid widgets
+        if (!allWidgets.includes(widgetFile)) continue;
         const script = document.createElement('script');
         script.src = `widgets/${widgetFile}`;
         script.type = "text/javascript";
