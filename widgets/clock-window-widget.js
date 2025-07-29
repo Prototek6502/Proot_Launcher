@@ -11,7 +11,7 @@
     widgetDiv.style.top = '80px';
     widgetDiv.style.left = '80px';
     widgetDiv.style.width = '160px';
-    widgetDiv.style.minHeight = '56px';
+    widgetDiv.style.minHeight = '36px';
     widgetDiv.style.background = 'var(--card-bg,#242c3c)';
     widgetDiv.style.color = 'var(--text,#eee)';
     widgetDiv.style.border = '2px solid var(--border,#3a4a6b)';
@@ -20,60 +20,79 @@
     widgetDiv.style.zIndex = 1000;
     widgetDiv.style.userSelect = 'none';
 
-    // Header for dragging
+    // HTML
     widgetDiv.innerHTML = `
       <div class="clock-window-header" style="
-        display:flex;
-        align-items:center;
-        justify-content:space-between;
+        display:flex;align-items:center;justify-content:space-between;
         padding:6px 11px 6px 11px;
-        background: var(--btn-bg,#1c2331);
+        background:var(--btn-bg,#1c2331);
         border-top-left-radius:8px;
         border-top-right-radius:8px;
-        cursor:move;
-        font-size:1em;
-        font-weight:500;
+        cursor:move;font-size:1em;font-weight:500;
       ">
-        <span style="font-size:1em;">🕒 Clock</span>
-        <button id="clock-window-close" style="
-          background:none;
-          border:none;
-          color:var(--text,#eee);
-          font-size:1.1em;
-          cursor:pointer;
-          margin-left:5px;
-          padding:0;
-        " title="Close">&times;</button>
+        <span style="font-size:1em;">Clock</span>
+        <span style="display:flex;gap:6px;">
+          <button id="clock-window-minimise" style="
+            background:none;border:none;color:var(--text,#eee);font-size:1.1em;cursor:pointer;padding:0;" title="Minimize">
+            <span id="clock-window-minimise-icon" style="display:inline-block;">&#8212;</span>
+          </button>
+          <button id="clock-window-close" style="
+            background:none;border:none;color:var(--text,#eee);font-size:1.1em;cursor:pointer;margin-left:5px;padding:0;" title="Close">&times;</button>
+        </span>
       </div>
       <div id="clock-window-body" style="
-        padding:14px 12px;
-        text-align:center;
-        font-size:1.4em;
-        letter-spacing:0.5px;
+        padding:14px 12px;text-align:center;font-size:1.4em;letter-spacing:0.5px;
       ">
         <span id="clock-window-time"></span>
       </div>
     `;
 
-    // Add to widgets container (absolute so append to body)
+    // Attach to widgets container
     const container = document.getElementById('widgets-container');
-    // Remove previous instance if exists
-    const old = document.getElementById('clock-window-widget');
-    if (old) old.remove();
-    container.appendChild(widgetDiv);
+    if (container) {
+        container.appendChild(widgetDiv);
+    } else {
+        document.body.appendChild(widgetDiv);
+    }
 
-    // Update time every second
+    // Live clock logic
     function updateClock() {
         const now = new Date();
         widgetDiv.querySelector('#clock-window-time').textContent =
             now.toLocaleTimeString();
     }
     updateClock();
-    setInterval(updateClock, 1000);
+    let timer = setInterval(updateClock, 1000);
 
-    // Close button
-    widgetDiv.querySelector('#clock-window-close').onclick = function() {
-        widgetDiv.remove();
+    // Minimize logic
+    let isMinimized = false;
+    const bodyDiv = widgetDiv.querySelector('#clock-window-body');
+    const minimiseBtn = widgetDiv.querySelector('#clock-window-minimise');
+    const minimiseIcon = widgetDiv.querySelector('#clock-window-minimise-icon');
+    minimiseBtn.onclick = function(e) {
+        e.stopPropagation();
+        isMinimized = !isMinimized;
+        bodyDiv.style.display = isMinimized ? "none" : "";
+        minimiseIcon.innerHTML = isMinimized ? "&#x25A1;" : "&#8212;"; // restore/minimize icons
+    };
+
+    // Close logic: disables the widget and reloads (removes from enabled list)
+    widgetDiv.querySelector('#clock-window-close').onclick = function(e) {
+        e.stopPropagation();
+        // Remove this widget from enabled list and reload
+        try {
+            const WIDGETS_KEY = "launcher_widgets_enabled";
+            let enabled = [];
+            try {
+                enabled = JSON.parse(localStorage.getItem(WIDGETS_KEY) || "[]");
+            } catch {}
+            const idx = enabled.indexOf("clock-window-widget.js");
+            if (idx > -1) {
+                enabled.splice(idx, 1);
+                localStorage.setItem(WIDGETS_KEY, JSON.stringify(enabled));
+            }
+        } catch {}
+        window.location.reload();
     };
 
     // Drag logic
@@ -81,6 +100,8 @@
     const header = widgetDiv.querySelector('.clock-window-header');
 
     header.addEventListener('mousedown', function(e) {
+        // Don't drag if clicking minimize/close
+        if (e.target === minimiseBtn || e.target === widgetDiv.querySelector('#clock-window-close')) return;
         isDragging = true;
         dragOffsetX = e.clientX - widgetDiv.offsetLeft;
         dragOffsetY = e.clientY - widgetDiv.offsetTop;
@@ -105,18 +126,19 @@
             isDragging = false;
             widgetDiv.style.transition = '';
             document.body.style.cursor = '';
+            savePos();
         }
     });
 
-    // Optional: touch support for mobile devices
+    // Touch support
     header.addEventListener('touchstart', function(e) {
-        if (!e.touches[0]) return;
+        if (!e.touches[0] || e.target === minimiseBtn || e.target === widgetDiv.querySelector('#clock-window-close')) return;
         isDragging = true;
         dragOffsetX = e.touches[0].clientX - widgetDiv.offsetLeft;
         dragOffsetY = e.touches[0].clientY - widgetDiv.offsetTop;
         widgetDiv.style.transition = 'none';
         e.preventDefault();
-    }, {passive:false});
+    }, {passive: false});
 
     document.addEventListener('touchmove', function(e) {
         if (!isDragging || !e.touches[0]) return;
@@ -126,32 +148,34 @@
         y = Math.max(0, Math.min(window.innerHeight - widgetDiv.offsetHeight, y));
         widgetDiv.style.left = x + 'px';
         widgetDiv.style.top = y + 'px';
-    }, {passive:false});
+    }, {passive: false});
 
     document.addEventListener('touchend', function(e) {
         if (isDragging) {
             isDragging = false;
             widgetDiv.style.transition = '';
+            savePos();
         }
     });
 
-    // Optional: Save position in localStorage
-    let savePos = function() {
+    // Save position in localStorage
+    function savePos() {
         localStorage.setItem('clock-window-pos', JSON.stringify({
             left: widgetDiv.style.left,
             top: widgetDiv.style.top
         }));
-    };
-    let loadPos = function() {
+    }
+    function loadPos() {
         try {
             const pos = JSON.parse(localStorage.getItem('clock-window-pos') || '{}');
             if (pos.left) widgetDiv.style.left = pos.left;
             if (pos.top) widgetDiv.style.top = pos.top;
         } catch {}
-    };
-    // Save position when drag ends
-    document.addEventListener('mouseup', savePos);
-    document.addEventListener('touchend', savePos);
+    }
     loadPos();
 
+    // Clean up interval on removal
+    widgetDiv.addEventListener('remove', function() {
+        clearInterval(timer);
+    });
 })();

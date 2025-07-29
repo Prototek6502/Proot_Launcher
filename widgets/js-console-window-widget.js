@@ -11,7 +11,7 @@
     widgetDiv.style.top = '180px';
     widgetDiv.style.left = '80px';
     widgetDiv.style.width = '340px';
-    widgetDiv.style.minHeight = '120px';
+    widgetDiv.style.minHeight = '48px';
     widgetDiv.style.background = 'var(--card-bg,#242c3c)';
     widgetDiv.style.color = 'var(--text,#eee)';
     widgetDiv.style.border = '2px solid var(--border,#3a4a6b)';
@@ -34,15 +34,14 @@
         font-weight:500;
       ">
         <span style="font-size:1em;">🖥️ JS Console</span>
-        <button id="js-console-window-close" style="
-          background:none;
-          border:none;
-          color:var(--text,#eee);
-          font-size:1.1em;
-          cursor:pointer;
-          margin-left:5px;
-          padding:0;
-        " title="Close">&times;</button>
+        <span style="display:flex;gap:6px;">
+          <button id="js-console-window-minimise" style="
+            background:none;border:none;color:var(--text,#eee);font-size:1.1em;cursor:pointer;padding:0;" title="Minimize">
+            <span id="js-console-window-minimise-icon" style="display:inline-block;">&#8212;</span>
+          </button>
+          <button id="js-console-window-close" style="
+            background:none;border:none;color:var(--text,#eee);font-size:1.1em;cursor:pointer;margin-left:5px;padding:0;" title="Close">&times;</button>
+        </span>
       </div>
       <div id="js-console-window-body" style="
         padding:10px 9px;
@@ -55,7 +54,13 @@
       </div>
     `;
 
-    document.body.appendChild(widgetDiv);
+    // Attach to widgets container if present
+    const container = document.getElementById('widgets-container');
+    if (container) {
+        container.appendChild(widgetDiv);
+    } else {
+        document.body.appendChild(widgetDiv);
+    }
 
     // JS Console logic
     const outputDiv = widgetDiv.querySelector('#js-console-output');
@@ -96,9 +101,35 @@
         input.value = '';
     });
 
-    // Close button
-    widgetDiv.querySelector('#js-console-window-close').onclick = function() {
-        widgetDiv.remove();
+    // Minimize logic
+    let isMinimized = false;
+    const bodyDiv = widgetDiv.querySelector('#js-console-window-body');
+    const minimiseBtn = widgetDiv.querySelector('#js-console-window-minimise');
+    const minimiseIcon = widgetDiv.querySelector('#js-console-window-minimise-icon');
+    minimiseBtn.onclick = function(e) {
+        e.stopPropagation();
+        isMinimized = !isMinimized;
+        bodyDiv.style.display = isMinimized ? "none" : "";
+        minimiseIcon.innerHTML = isMinimized ? "&#x25A1;" : "&#8212;"; // restore/minimize icons
+    };
+
+    // Close logic: disables the widget and reloads (removes from enabled list)
+    widgetDiv.querySelector('#js-console-window-close').onclick = function(e) {
+        e.stopPropagation();
+        // Remove this widget from enabled list and reload
+        try {
+            const WIDGETS_KEY = "launcher_widgets_enabled";
+            let enabled = [];
+            try {
+                enabled = JSON.parse(localStorage.getItem(WIDGETS_KEY) || "[]");
+            } catch {}
+            const idx = enabled.indexOf("js-console-window-widget.js");
+            if (idx > -1) {
+                enabled.splice(idx, 1);
+                localStorage.setItem(WIDGETS_KEY, JSON.stringify(enabled));
+            }
+        } catch {}
+        window.location.reload();
     };
 
     // Drag logic
@@ -106,6 +137,7 @@
     const header = widgetDiv.querySelector('.js-console-window-header');
 
     header.addEventListener('mousedown', function(e) {
+        if (e.target === minimiseBtn || e.target === widgetDiv.querySelector('#js-console-window-close')) return;
         isDragging = true;
         dragOffsetX = e.clientX - widgetDiv.offsetLeft;
         dragOffsetY = e.clientY - widgetDiv.offsetTop;
@@ -129,18 +161,20 @@
             isDragging = false;
             widgetDiv.style.transition = '';
             document.body.style.cursor = '';
+            savePos();
         }
     });
 
-    // Optional: touch support for mobile
+    // Touch support
     header.addEventListener('touchstart', function(e) {
-        if (!e.touches[0]) return;
+        if (!e.touches[0] || e.target === minimiseBtn || e.target === widgetDiv.querySelector('#js-console-window-close')) return;
         isDragging = true;
         dragOffsetX = e.touches[0].clientX - widgetDiv.offsetLeft;
         dragOffsetY = e.touches[0].clientY - widgetDiv.offsetTop;
         widgetDiv.style.transition = 'none';
         e.preventDefault();
-    }, {passive:false});
+    }, {passive: false});
+
     document.addEventListener('touchmove', function(e) {
         if (!isDragging || !e.touches[0]) return;
         let x = e.touches[0].clientX - dragOffsetX;
@@ -149,30 +183,34 @@
         y = Math.max(0, Math.min(window.innerHeight - widgetDiv.offsetHeight, y));
         widgetDiv.style.left = x + 'px';
         widgetDiv.style.top = y + 'px';
-    }, {passive:false});
+    }, {passive: false});
+
     document.addEventListener('touchend', function(e) {
         if (isDragging) {
             isDragging = false;
             widgetDiv.style.transition = '';
+            savePos();
         }
     });
 
-    // Optional: Save position in localStorage
-    let savePos = function() {
+    // Save position in localStorage
+    function savePos() {
         localStorage.setItem('js-console-window-pos', JSON.stringify({
             left: widgetDiv.style.left,
             top: widgetDiv.style.top
         }));
-    };
-    let loadPos = function() {
+    }
+    function loadPos() {
         try {
             const pos = JSON.parse(localStorage.getItem('js-console-window-pos') || '{}');
             if (pos.left) widgetDiv.style.left = pos.left;
             if (pos.top) widgetDiv.style.top = pos.top;
         } catch {}
-    };
-    document.addEventListener('mouseup', savePos);
-    document.addEventListener('touchend', savePos);
+    }
     loadPos();
 
+    // Clean up logic if needed
+    widgetDiv.addEventListener('remove', function() {
+        // No interval to clear, but could clear event listeners if needed here.
+    });
 })();
