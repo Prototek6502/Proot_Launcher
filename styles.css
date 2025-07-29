@@ -24,6 +24,9 @@ body {
     --secondary-text: #b5b5b5;
     --blur: initial;
     --forest-bg-image: none;
+    --btn-bg: #222;
+    --btn-text: #fff;
+    --btn-hover: #444;
 }
 
 body.theme-dark {
@@ -48,6 +51,9 @@ body.theme-dark {
     --secondary-text: #b5b5b5;
     --blur: initial;
     --forest-bg-image: none;
+    --btn-bg: #222;
+    --btn-text: #fff;
+    --btn-hover: #444;
 }
 
 /*body.theme-light {
@@ -96,6 +102,9 @@ body.theme-blue {
     --secondary-text: #a1b6d6;
     --blur: initial;
     --forest-bg-image: none;
+    --btn-bg: #2357a7;
+    --btn-text: #fff;
+    --btn-hover: #3477e0;
 }
 body.theme-forest {
     --bg: transparent;
@@ -119,6 +128,9 @@ body.theme-forest {
     --secondary-text: #bce7c3;
     --blur: blur(12px);
     --forest-bg-image: url('forest_bg.png');
+    --btn-bg: #375a3c;
+    --btn-text: #fff;
+    --btn-hover: #49734e;
 }
 
 /* Set background for body */
