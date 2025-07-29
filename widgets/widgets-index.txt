@@ -1,2 +1,3 @@
 clock-window-widget.js
 js-console-window-widget.js
+usage-graph-widget.js
