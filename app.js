@@ -194,6 +194,84 @@ window.addEventListener('keydown', function(event) {
     }
 });
 
+// --- Widget Modal Logic ---
+const WIDGETS_KEY = "launcher_widgets_enabled";
+
+// Utility: fetch all available widgets from index.txt
+async function getAllWidgets() {
+    const res = await fetch('widgets/widgets-index.txt');
+    return (await res.text())
+        .split('\n')
+        .map(l => l.trim())
+        .filter(l => l && !l.startsWith('#'));
+}
+
+// Utility: get enabled widget list from localStorage
+function getEnabledWidgets() {
+    let arr = [];
+    try {
+        arr = JSON.parse(localStorage.getItem(WIDGETS_KEY) || "[]");
+    } catch {}
+    return arr;
+}
+
+// Utility: save enabled widget list to localStorage
+function setEnabledWidgets(arr) {
+    localStorage.setItem(WIDGETS_KEY, JSON.stringify(arr));
+}
+
+// UI Logic
+document.getElementById('widgets-navbar-btn').onclick = async function() {
+    // Show modal
+    document.getElementById('widgets-modal').style.display = "block";
+
+    // Load widget list
+    const allWidgets = await getAllWidgets();
+    const enabledWidgets = getEnabledWidgets();
+
+    const ul = document.getElementById('widgets-list');
+    ul.innerHTML = '';
+    allWidgets.forEach(widget => {
+        const li = document.createElement('li');
+        li.style.marginBottom = '0.5em';
+
+        const cb = document.createElement('input');
+        cb.type = 'checkbox';
+        cb.value = widget;
+        cb.checked = enabledWidgets.includes(widget);
+
+        const label = document.createElement('label');
+        label.textContent = widget;
+        label.style.marginLeft = '0.5em';
+
+        li.appendChild(cb);
+        li.appendChild(label);
+        ul.appendChild(li);
+    });
+};
+
+document.getElementById('widgets-modal-close').onclick = function() {
+    document.getElementById('widgets-modal').style.display = "none";
+};
+
+document.getElementById('widgets-save-btn').onclick = function() {
+    // Gather checked widgets
+    const checks = Array.from(document.querySelectorAll('#widgets-list input[type="checkbox"]'));
+    const enabled = checks.filter(cb => cb.checked).map(cb => cb.value);
+    setEnabledWidgets(enabled);
+
+    // Optionally reload widgets here (see below)
+    window.location.reload(); // simplest way for now
+
+    document.getElementById('widgets-modal').style.display = "none";
+};
+
+// Optional: click outside modal to close
+window.onclick = function(event) {
+    const modal = document.getElementById('widgets-modal');
+    if (event.target === modal) modal.style.display = "none";
+};
+
 // --- Add Link Form Handler ---
 document.getElementById('add-link-form').addEventListener('submit', async function(e) {
     e.preventDefault();
