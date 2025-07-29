@@ -10,7 +10,7 @@
     widgetDiv.style.position = 'absolute';
     widgetDiv.style.top = '180px';
     widgetDiv.style.left = '80px';
-    widgetDiv.style.width = '340px';
+    widgetDiv.style.width = '170px';
     widgetDiv.style.minHeight = '48px';
     widgetDiv.style.background = 'var(--card-bg,#242c3c)';
     widgetDiv.style.color = 'var(--text,#eee)';
