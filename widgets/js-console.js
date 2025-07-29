@@ -1,12 +1,14 @@
-// JS Console Widget
 (function() {
-    // Create widget container
+    // Remove previous instance if exists
+    const old = document.getElementById('js-console-widget-container');
+    if (old) old.remove();
+
     const widgetDiv = document.createElement('div');
+    widgetDiv.id = 'js-console-widget-container';
     widgetDiv.className = 'widget js-console-widget';
     widgetDiv.style.maxWidth = '400px';
     widgetDiv.style.padding = '1em';
 
-    // HTML for widget
     widgetDiv.innerHTML = `
         <strong>JS Console</strong>
         <div id="js-console-output" style="background:#222;color:#eee;height:120px;overflow-y:auto;padding:6px;border-radius:6px;font-size:0.9em;margin-bottom:0.5em;"></div>
@@ -16,15 +18,12 @@
         </form>
     `;
 
-    // Add to widgets container
     document.getElementById('widgets-container').appendChild(widgetDiv);
 
-    // Elements
     const outputDiv = widgetDiv.querySelector('#js-console-output');
     const form = widgetDiv.querySelector('#js-console-form');
     const input = widgetDiv.querySelector('#js-console-input');
 
-    // Helper to print output
     function printToConsole(type, msg) {
         const entry = document.createElement('div');
         entry.textContent = `[${type}] ${msg}`;
@@ -33,7 +32,6 @@
         outputDiv.scrollTop = outputDiv.scrollHeight;
     }
 
-    // Intercept console.log/error/warn
     if (!window._jsConsoleWidgetHooked) {
         window._jsConsoleWidgetHooked = true;
         ['log', 'error', 'warn'].forEach(method => {
@@ -45,14 +43,12 @@
         });
     }
 
-    // Evaluate JS on submit
     form.addEventListener('submit', function(e) {
         e.preventDefault();
         const code = input.value;
         if (!code.trim()) return;
         printToConsole('input', code);
         try {
-            // Use Function constructor for better scoping
             let result = Function('"use strict";return (' + code + ')')();
             printToConsole('result', typeof result === 'object' ? JSON.stringify(result) : String(result));
         } catch (err) {

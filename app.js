@@ -201,7 +201,8 @@ const WIDGETS_KEY = "launcher_widgets_enabled";
 
 // Utility: fetch all available widgets from index.txt
 async function getAllWidgets() {
-    const res = await fetch('widgets/widgets-index.txt');
+    // Prevent caching by adding a timestamp
+    const res = await fetch('widgets/widgets-index.txt?' + Date.now());
     return (await res.text())
         .split('\n')
         .map(l => l.trim())
@@ -226,7 +227,7 @@ function setEnabledWidgets(arr) {
 document.getElementById('widgets-navbar-btn').addEventListener('click', async function() {
     document.getElementById('widgets-modal').style.display = "block";
 
-    const allWidgets = await getAllWidgets();
+    const allWidgets = await getAllWidgets(); // always fresh
     const enabledWidgets = getEnabledWidgets();
 
     const ul = document.getElementById('widgets-list');
@@ -260,6 +261,11 @@ document.getElementById('widgets-save-btn').addEventListener('click', function()
     setEnabledWidgets(enabled);
     window.location.reload(); // reload so widgets-loader picks up changes
     document.getElementById('widgets-modal').style.display = "none";
+});
+
+window.addEventListener('click', function(event) {
+    const widgetsModal = document.getElementById('widgets-modal');
+    if (event.target === widgetsModal) widgetsModal.style.display = "none";
 });
 
 // Optional: click outside modal to close (for widgets modal)
