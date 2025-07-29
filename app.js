@@ -177,18 +177,7 @@ function closeImportCSSModal() {
     document.getElementById('import-css-modal').style.display = "none";
     document.getElementById('import-css-form').reset();
 }
-document.addEventListener('DOMContentLoaded', function() {
-  const searchForm = document.getElementById('search-form');
-  const searchInput = document.getElementById('search-input');
-  if (searchForm && searchInput) {
-    searchForm.addEventListener('submit', function() {
-      setTimeout(() => {
-        searchInput.value = '';
-      }, 50); // Let the form submit and open the DuckDuckGo page, then clear the input
-    });
-  }
 
-  // ...rest of your existing code...
 document.getElementById('add-link-open-btn').addEventListener('click', openAddLinkModal);
 document.getElementById('add-link-close-btn').addEventListener('click', closeAddLinkModal);
 document.getElementById('import-css-open-btn').addEventListener('click', openImportCSSModal);
