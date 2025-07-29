@@ -1,4 +1,5 @@
 (async function() {
+    // Ensure a single container exists for widgets
     let container = document.getElementById('widgets-container');
     if (!container) {
         container = document.createElement('div');
@@ -7,6 +8,8 @@
     } else {
         container.innerHTML = ''; // clear all widgets before loading!
     }
+
+    // Load widgets list
     const allRes = await fetch('widgets/widgets-index.txt');
     const allWidgets = (await allRes.text())
         .split('\n')
@@ -17,23 +20,27 @@
     try {
         enabled = JSON.parse(localStorage.getItem("launcher_widgets_enabled") || "[]");
     } catch {}
+    // If nothing is enabled, enable everything by default
     if (!enabled.length) enabled = allWidgets;
 
-    let container = document.getElementById('widgets-container');
-    if (!container) {
-        container = document.createElement('div');
-        container.id = 'widgets-container';
-        document.body.appendChild(container);
-    } else {
-        container.innerHTML = ''; // clear all widgets before loading!
-    }
+    // This block is duplicated above, can be removed for clarity
+    // let container = document.getElementById('widgets-container');
+    // if (!container) {
+    //     container = document.createElement('div');
+    //     container.id = 'widgets-container';
+    //     document.body.appendChild(container);
+    // } else {
+    //     container.innerHTML = ''; // clear all widgets before loading!
+    // }
 
+    // Load each widget as a script
     for (const widgetFile of enabled) {
         if (!widgetFile.endsWith('.js')) continue;
         const script = document.createElement('script');
         script.src = `widgets/${widgetFile}`;
         script.type = "text/javascript";
-        script.defer = true;
-        document.head.appendChild(script);
+        // Use async instead of defer so execution order is not blocked
+        script.async = true;
+        document.body.appendChild(script);
     }
 })();
