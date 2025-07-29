@@ -8,16 +8,16 @@
     widgetDiv.id = 'clock-window-widget';
     widgetDiv.className = 'widget clock-window-widget';
     widgetDiv.style.position = 'absolute';
-    widgetDiv.style.top = '80px';
+    widgetDiv.style.top = '180px';
     widgetDiv.style.left = '80px';
-    widgetDiv.style.width = '160px';
-    widgetDiv.style.minHeight = '36px';
+    widgetDiv.style.width = '340px';
+    widgetDiv.style.minHeight = '48px';
     widgetDiv.style.background = 'var(--card-bg,#242c3c)';
     widgetDiv.style.color = 'var(--text,#eee)';
     widgetDiv.style.border = '2px solid var(--border,#3a4a6b)';
     widgetDiv.style.borderRadius = '10px';
     widgetDiv.style.boxShadow = '0 2px 12px rgba(0,0,0,0.18)';
-    widgetDiv.style.zIndex = 1000;
+    widgetDiv.style.zIndex = 1001;
     widgetDiv.style.userSelect = 'none';
 
     // HTML
@@ -47,7 +47,7 @@
       </div>
     `;
 
-    // Attach to widgets container
+    // Attach to widgets container if present
     const container = document.getElementById('widgets-container');
     if (container) {
         container.appendChild(widgetDiv);
@@ -64,20 +64,20 @@
     updateClock();
     let timer = setInterval(updateClock, 1000);
 
-    // Minimize logic
+     // Minimize logic
     let isMinimized = false;
-    const bodyDiv = widgetDiv.querySelector('#clock-window-body');
-    const minimiseBtn = widgetDiv.querySelector('#clock-window-minimise');
-    const minimiseIcon = widgetDiv.querySelector('#clock-window-minimise-icon');
+    const bodyDiv = widgetDiv.querySelector(`#${instanceId}-body`);
+    const minimiseBtn = widgetDiv.querySelector(`#${instanceId}-minimise`);
+    const minimiseIcon = widgetDiv.querySelector(`#${instanceId}-minimise-icon`);
     minimiseBtn.onclick = function(e) {
         e.stopPropagation();
         isMinimized = !isMinimized;
         bodyDiv.style.display = isMinimized ? "none" : "";
-        minimiseIcon.innerHTML = isMinimized ? "&#x25A1;" : "&#8212;"; // restore/minimize icons
+        minimiseIcon.innerHTML = isMinimized ? "&#x25A1;" : "&#8212;";
     };
 
     // Close logic: disables the widget and reloads (removes from enabled list)
-    widgetDiv.querySelector('#clock-window-close').onclick = function(e) {
+    widgetDiv.querySelector(`#${instanceId}-close`).onclick = function(e) {
         e.stopPropagation();
         // Remove this widget from enabled list and reload
         try {
@@ -86,22 +86,22 @@
             try {
                 enabled = JSON.parse(localStorage.getItem(WIDGETS_KEY) || "[]");
             } catch {}
-            const idx = enabled.indexOf("clock-window-widget.js");
+            const idx = enabled.indexOf("js-console-window-widget.js");
             if (idx > -1) {
                 enabled.splice(idx, 1);
                 localStorage.setItem(WIDGETS_KEY, JSON.stringify(enabled));
             }
         } catch {}
+        widgetDiv.remove();
         window.location.reload();
     };
 
     // Drag logic
     let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
-    const header = widgetDiv.querySelector('.clock-window-header');
+    const header = widgetDiv.querySelector('.js-console-window-header');
 
     header.addEventListener('mousedown', function(e) {
-        // Don't drag if clicking minimize/close
-        if (e.target === minimiseBtn || e.target === widgetDiv.querySelector('#clock-window-close')) return;
+        if (e.target === minimiseBtn || e.target === widgetDiv.querySelector(`#${instanceId}-close`)) return;
         isDragging = true;
         dragOffsetX = e.clientX - widgetDiv.offsetLeft;
         dragOffsetY = e.clientY - widgetDiv.offsetTop;
@@ -114,7 +114,6 @@
         if (!isDragging) return;
         let x = e.clientX - dragOffsetX;
         let y = e.clientY - dragOffsetY;
-        // Clamp within viewport
         x = Math.max(0, Math.min(window.innerWidth - widgetDiv.offsetWidth, x));
         y = Math.max(0, Math.min(window.innerHeight - widgetDiv.offsetHeight, y));
         widgetDiv.style.left = x + 'px';
@@ -132,7 +131,7 @@
 
     // Touch support
     header.addEventListener('touchstart', function(e) {
-        if (!e.touches[0] || e.target === minimiseBtn || e.target === widgetDiv.querySelector('#clock-window-close')) return;
+        if (!e.touches[0] || e.target === minimiseBtn || e.target === widgetDiv.querySelector(`#${instanceId}-close`)) return;
         isDragging = true;
         dragOffsetX = e.touches[0].clientX - widgetDiv.offsetLeft;
         dragOffsetY = e.touches[0].clientY - widgetDiv.offsetTop;
@@ -160,22 +159,17 @@
 
     // Save position in localStorage
     function savePos() {
-        localStorage.setItem('clock-window-pos', JSON.stringify({
+        localStorage.setItem('js-console-window-pos', JSON.stringify({
             left: widgetDiv.style.left,
             top: widgetDiv.style.top
         }));
     }
     function loadPos() {
         try {
-            const pos = JSON.parse(localStorage.getItem('clock-window-pos') || '{}');
+            const pos = JSON.parse(localStorage.getItem('js-console-window-pos') || '{}');
             if (pos.left) widgetDiv.style.left = pos.left;
             if (pos.top) widgetDiv.style.top = pos.top;
         } catch {}
     }
     loadPos();
-
-    // Clean up interval on removal
-    widgetDiv.addEventListener('remove', function() {
-        clearInterval(timer);
-    });
 })();
