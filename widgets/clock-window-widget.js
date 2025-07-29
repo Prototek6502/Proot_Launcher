@@ -64,11 +64,11 @@
     updateClock();
     let timer = setInterval(updateClock, 1000);
 
-     // Minimize logic
+    // Minimize logic
     let isMinimized = false;
-    const bodyDiv = widgetDiv.querySelector(`#${instanceId}-body`);
-    const minimiseBtn = widgetDiv.querySelector(`#${instanceId}-minimise`);
-    const minimiseIcon = widgetDiv.querySelector(`#${instanceId}-minimise-icon`);
+    const bodyDiv = widgetDiv.querySelector('#clock-window-body');
+    const minimiseBtn = widgetDiv.querySelector('#clock-window-minimise');
+    const minimiseIcon = widgetDiv.querySelector('#clock-window-minimise-icon');
     minimiseBtn.onclick = function(e) {
         e.stopPropagation();
         isMinimized = !isMinimized;
@@ -76,24 +76,11 @@
         minimiseIcon.innerHTML = isMinimized ? "&#x25A1;" : "&#8212;";
     };
 
-    // Close logic: disables the widget and reloads (removes from enabled list)
-    widgetDiv.querySelector(`#${instanceId}-close`).onclick = function(e) {
+    // Close logic
+    widgetDiv.querySelector('#clock-window-close').onclick = function(e) {
         e.stopPropagation();
-        // Remove this widget from enabled list and reload
-        try {
-            const WIDGETS_KEY = "launcher_widgets_enabled";
-            let enabled = [];
-            try {
-                enabled = JSON.parse(localStorage.getItem(WIDGETS_KEY) || "[]");
-            } catch {}
-            const idx = enabled.indexOf("clock-window-widget.js");
-            if (idx > -1) {
-                enabled.splice(idx, 1);
-                localStorage.setItem(WIDGETS_KEY, JSON.stringify(enabled));
-            }
-        } catch {}
         widgetDiv.remove();
-        window.location.reload();
+        clearInterval(timer); // Clear the timer when closing
     };
 
     // Drag logic
@@ -101,12 +88,12 @@
     const header = widgetDiv.querySelector('.clock-window-header');
 
     header.addEventListener('mousedown', function(e) {
-        if (e.target === minimiseBtn || e.target === widgetDiv.querySelector(`#${instanceId}-close`)) return;
+        if (e.target === minimiseBtn || e.target === widgetDiv.querySelector('#clock-window-close')) return;
         isDragging = true;
         dragOffsetX = e.clientX - widgetDiv.offsetLeft;
         dragOffsetY = e.clientY - widgetDiv.offsetTop;
         widgetDiv.style.transition = 'none';
-        document.body.style.cursor = 'move';
+        document.body.style.cursor = 'move'; // Set cursor to move
         e.preventDefault();
     });
 
@@ -124,14 +111,14 @@
         if (isDragging) {
             isDragging = false;
             widgetDiv.style.transition = '';
-            document.body.style.cursor = '';
+            document.body.style.cursor = ''; // Reset cursor
             savePos();
         }
     });
 
     // Touch support
     header.addEventListener('touchstart', function(e) {
-        if (!e.touches[0] || e.target === minimiseBtn || e.target === widgetDiv.querySelector(`#${instanceId}-close`)) return;
+        if (!e.touches[0] || e.target === minimiseBtn || e.target === widgetDiv.querySelector('#clock-window-close')) return;
         isDragging = true;
         dragOffsetX = e.touches[0].clientX - widgetDiv.offsetLeft;
         dragOffsetY = e.touches[0].clientY - widgetDiv.offsetTop;
@@ -164,6 +151,7 @@
             top: widgetDiv.style.top
         }));
     }
+
     function loadPos() {
         try {
             const pos = JSON.parse(localStorage.getItem('clock-window-pos') || '{}');
