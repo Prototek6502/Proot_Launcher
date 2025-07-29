@@ -258,9 +258,8 @@ document.getElementById('widgets-modal-close').addEventListener('click', functio
 document.getElementById('widgets-save-btn').addEventListener('click', function() {
     const checks = Array.from(document.querySelectorAll('#widgets-list input[type="checkbox"]'));
     const enabled = checks.filter(cb => cb.checked).map(cb => cb.value);
-    setEnabledWidgets(enabled);
-    window.location.reload(); // reload so widgets-loader picks up changes
-    document.getElementById('widgets-modal').style.display = "none";
+    localStorage.setItem("launcher_widgets_enabled", JSON.stringify(enabled));
+    window.location.reload();
 });
 
 document.getElementById('widgets-center-btn').addEventListener('click', function() {
