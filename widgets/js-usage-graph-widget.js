@@ -47,7 +47,7 @@
         </span>
       </div>
       <div id="${instanceId}-body" style="padding:10px 9px;">
-        <canvas id="${instanceId}-chart" style="width:100%; height:200px;"></canvas>
+        <canvas id="${instanceId}-chart" width="320" height="200" style="width:100%; height:200px;"></canvas>
       </div>
     `;
 
@@ -113,7 +113,7 @@
     const bodyDiv = widgetDiv.querySelector(`#${instanceId}-body`);
     const minimiseBtn = widgetDiv.querySelector(`#${instanceId}-minimise`);
     const minimiseIcon = widgetDiv.querySelector(`#${instanceId}-minimise-icon`);
-    
+
     minimiseBtn.onclick = function(e) {
         e.stopPropagation();
         isMinimized = !isMinimized;
