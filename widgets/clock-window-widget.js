@@ -86,7 +86,7 @@
             try {
                 enabled = JSON.parse(localStorage.getItem(WIDGETS_KEY) || "[]");
             } catch {}
-            const idx = enabled.indexOf("js-console-window-widget.js");
+            const idx = enabled.indexOf("clock-window-widget.js");
             if (idx > -1) {
                 enabled.splice(idx, 1);
                 localStorage.setItem(WIDGETS_KEY, JSON.stringify(enabled));
@@ -98,7 +98,7 @@
 
     // Drag logic
     let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
-    const header = widgetDiv.querySelector('.js-console-window-header');
+    const header = widgetDiv.querySelector('.clock-window-header');
 
     header.addEventListener('mousedown', function(e) {
         if (e.target === minimiseBtn || e.target === widgetDiv.querySelector(`#${instanceId}-close`)) return;
@@ -159,14 +159,14 @@
 
     // Save position in localStorage
     function savePos() {
-        localStorage.setItem('js-console-window-pos', JSON.stringify({
+        localStorage.setItem('clock-window-pos', JSON.stringify({
             left: widgetDiv.style.left,
             top: widgetDiv.style.top
         }));
     }
     function loadPos() {
         try {
-            const pos = JSON.parse(localStorage.getItem('js-console-window-pos') || '{}');
+            const pos = JSON.parse(localStorage.getItem('clock-window-pos') || '{}');
             if (pos.left) widgetDiv.style.left = pos.left;
             if (pos.top) widgetDiv.style.top = pos.top;
         } catch {}
