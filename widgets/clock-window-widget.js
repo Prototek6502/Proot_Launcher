@@ -56,7 +56,11 @@
     `;
 
     // Add to widgets container (absolute so append to body)
-    document.body.appendChild(widgetDiv);
+    const container = document.getElementById('widgets-container');
+    // Remove previous instance if exists
+    const old = document.getElementById('clock-window-widget');
+    if (old) old.remove();
+    container.appendChild(widgetDiv);
 
     // Update time every second
     function updateClock() {

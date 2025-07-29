@@ -1,4 +1,12 @@
 (async function() {
+    let container = document.getElementById('widgets-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'widgets-container';
+        document.body.appendChild(container);
+    } else {
+        container.innerHTML = ''; // clear all widgets before loading!
+    }
     const allRes = await fetch('widgets/widgets-index.txt');
     const allWidgets = (await allRes.text())
         .split('\n')
