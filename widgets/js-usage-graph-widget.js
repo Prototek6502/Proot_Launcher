@@ -1,12 +1,12 @@
 (function() {
     // Remove previous instance if exists
-    const old = document.getElementById('usage-graph-widget');
+    const old = document.getElementById('js-usage-graph-widget');
     if (old) old.remove();
 
     // Create widget DOM
     const widgetDiv = document.createElement('div');
-    widgetDiv.id = 'usage-graph-widget';
-    widgetDiv.className = 'widget usage-graph-widget';
+    widgetDiv.id = 'js-usage-graph-widget';
+    widgetDiv.className = 'widget js-usage-graph-widget';
     widgetDiv.style.position = 'absolute';
     widgetDiv.style.top = '180px';
     widgetDiv.style.left = '80px';
@@ -21,10 +21,10 @@
     widgetDiv.style.userSelect = 'none';
 
     // Unique widget instance ID for graph
-    const instanceId = 'usage-graph-' + Math.random().toString(36).slice(2);
+    const instanceId = 'js-usage-graph-' + Math.random().toString(36).slice(2);
 
     widgetDiv.innerHTML = `
-      <div class="usage-graph-header" style="
+      <div class="js-usage-graph-header" style="
         display:flex;
         align-items:center;
         justify-content:space-between;
@@ -76,6 +76,7 @@
         },
         options: {
             responsive: true,
+            maintainAspectRatio: false, // Prevents the graph from resizing unexpectedly
             scales: {
                 x: {
                     title: {
@@ -109,7 +110,7 @@
 
     // Minimize logic
     let isMinimized = false;
-        const bodyDiv = widgetDiv.querySelector(`#${instanceId}-body`);
+    const bodyDiv = widgetDiv.querySelector(`#${instanceId}-body`);
     const minimiseBtn = widgetDiv.querySelector(`#${instanceId}-minimise`);
     const minimiseIcon = widgetDiv.querySelector(`#${instanceId}-minimise-icon`);
     
@@ -129,7 +130,7 @@
 
     // Drag logic
     let isDragging = false, dragOffsetX = 0, dragOffsetY = 0;
-    const header = widgetDiv.querySelector('.usage-graph-header');
+    const header = widgetDiv.querySelector('.js-usage-graph-header');
 
     header.addEventListener('mousedown', function(e) {
         if (e.target === minimiseBtn || e.target === widgetDiv.querySelector(`#${instanceId}-close`)) return;
@@ -190,14 +191,14 @@
 
     // Save position in localStorage
     function savePos() {
-        localStorage.setItem('usage-graph-window-pos', JSON.stringify({
+        localStorage.setItem('js-usage-graph-window-pos', JSON.stringify({
             left: widgetDiv.style.left,
             top: widgetDiv.style.top
         }));
     }
     function loadPos() {
         try {
-            const pos = JSON.parse(localStorage.getItem('usage-graph-window-pos') || '{}');
+            const pos = JSON.parse(localStorage.getItem('js-usage-graph-window-pos') || '{}');
             if (pos.left) widgetDiv.style.left = pos.left;
             if (pos.top) widgetDiv.style.top = pos.top;
         } catch {}
