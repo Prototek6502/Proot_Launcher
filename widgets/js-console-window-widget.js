@@ -36,7 +36,7 @@
         font-size:1em;
         font-weight:500;
       ">
-        <span style="font-size:1em;">🖥️ JS Console</span>
+        <span style="font-size:1em;">JS Console</span>
         <span style="display:flex;gap:6px;">
           <button id="${instanceId}-minimise" style="
             background:none;border:none;color:var(--text,#eee);font-size:1.1em;cursor:pointer;padding:0;" title="Minimize">
